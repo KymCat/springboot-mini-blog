@@ -1,0 +1,46 @@
+package com.example.blogStudy.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Post {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id")
+    private Long id;
+
+    @Column(nullable = false, name = "post_title")
+    private String title;
+
+    @Column(nullable = false, name = "post_content")
+    private String content;
+
+    @Column(nullable = false, name = "post_date")
+    private LocalDateTime postDate;
+
+    @Column(nullable = false, name = "post_edit_date")
+    private LocalDateTime editDate;
+
+    // FK
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    public static Post create(Long id, String title, String content, LocalDateTime postDate, LocalDateTime editDate) {
+        Post post = new Post();
+        post.id = id;
+        post.title = title;
+        post.content = content;
+        post.postDate = postDate;
+        post.editDate = editDate;
+        return post;
+    }
+}
+
