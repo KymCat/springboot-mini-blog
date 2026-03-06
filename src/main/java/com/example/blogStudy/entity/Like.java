@@ -23,9 +23,10 @@ public class Like {
     @Column(name = "like_id")
     private Long id;
 
-    @Column(name = "like_date")
+    @Column(nullable = false, name = "like_date")
     private LocalDateTime likeDate;
 
+    // FK
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

@@ -15,13 +15,13 @@ import java.time.LocalDateTime;
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "comment_id")
+    @Column(nullable = false, name = "comment_id")
     private Long id;
 
-    @Column(name = "comment_content")
+    @Column(nullable = false, name = "comment_content")
     private String content;
 
-    @Column(name = "comment_date")
+    @Column(nullable = false, name = "comment_date")
     private LocalDateTime commentDate;
 
 
