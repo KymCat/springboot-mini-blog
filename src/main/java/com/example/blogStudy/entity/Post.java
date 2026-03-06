@@ -29,17 +29,18 @@ public class Post {
     private LocalDateTime editDate;
 
     // FK
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post create(Long id, String title, String content, LocalDateTime postDate, LocalDateTime editDate) {
+    public static Post create(Long id, String title, String content, User user) {
         Post post = new Post();
         post.id = id;
         post.title = title;
         post.content = content;
-        post.postDate = postDate;
-        post.editDate = editDate;
+        post.postDate = LocalDateTime.now();
+        post.editDate = LocalDateTime.now();
+        post.user = user;
         return post;
     }
 }

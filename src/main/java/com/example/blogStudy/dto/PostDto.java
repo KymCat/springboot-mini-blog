@@ -1,6 +1,7 @@
 package com.example.blogStudy.dto;
 
 import com.example.blogStudy.entity.Post;
+import com.example.blogStudy.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -25,7 +26,7 @@ public class PostDto {
         );
     }
 
-    public Post toEntity() {
-        return Post.create(this.id, this.title, this.content, this.postDate, this.editDate);
+    public Post toEntity(User user) {
+        return Post.create(this.id, this.title, this.content, user);
     }
 }
