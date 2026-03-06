@@ -33,9 +33,8 @@ public class Post {
     @JoinColumn(name = "user_id")
     private User user;
 
-    public static Post create(Long id, String title, String content, User user) {
+    public static Post create(String title, String content, User user) {
         Post post = new Post();
-        post.id = id;
         post.title = title;
         post.content = content;
         post.postDate = LocalDateTime.now();
