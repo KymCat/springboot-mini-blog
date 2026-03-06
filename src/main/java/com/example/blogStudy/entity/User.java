@@ -3,6 +3,8 @@ package com.example.blogStudy.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -25,4 +27,5 @@ public class User {
         user.name = name;
         return user;
     }
+
 }
