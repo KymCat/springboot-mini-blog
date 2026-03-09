@@ -25,7 +25,7 @@ public class Post extends BaseTimeEntity {
 
 
     // FK
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
