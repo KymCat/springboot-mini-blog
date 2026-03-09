@@ -11,7 +11,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 import java.time.LocalDateTime;
 
 @Getter
-@MappedSuperclass
+@MappedSuperclass   // 해당 클래스는 테이블이 아니고 자식 엔티티가 컬럼을 상속한다.
 @EntityListeners(AuditingEntityListener.class)
 public abstract class BaseTimeEntity {
 
