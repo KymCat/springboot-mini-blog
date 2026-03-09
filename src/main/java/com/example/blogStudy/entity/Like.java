@@ -23,7 +23,7 @@ public class Like {
     private Long id;
 
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     // FK
     @ManyToOne(fetch = FetchType.LAZY)
@@ -37,7 +37,7 @@ public class Like {
 
     @Builder
     public Like(User user, Post post) {
-        this.createAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
         this.user = user;
         this.post = post;
     }

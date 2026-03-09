@@ -23,10 +23,10 @@ public class Post {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
     // FK
     @ManyToOne(fetch = FetchType.EAGER)
@@ -37,8 +37,8 @@ public class Post {
         Post post = new Post();
         post.title = title;
         post.content = content;
-        post.createAt = LocalDateTime.now();
-        post.updateAt = LocalDateTime.now();
+        post.createdAt = LocalDateTime.now();
+        post.updatedAt = LocalDateTime.now();
         post.user = user;
         return post;
     }

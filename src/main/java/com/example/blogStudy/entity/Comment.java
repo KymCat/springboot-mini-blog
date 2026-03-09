@@ -22,10 +22,10 @@ public class Comment {
     private String content;
 
     @Column(nullable = false)
-    private LocalDateTime createAt;
+    private LocalDateTime createdAt;
 
     @Column(nullable = false)
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 
 
     // FK
@@ -40,8 +40,8 @@ public class Comment {
     @Builder
     public Comment(String content, User user, Post post) {
         this.content = content;
-        this.createAt = LocalDateTime.now();
-        this.updateAt = LocalDateTime.now();
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = LocalDateTime.now();
         this.user = user;
         this.post = post;
     }
