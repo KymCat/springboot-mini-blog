@@ -12,13 +12,13 @@ import java.util.List;
 @Table(name = "users")
 public class User {
     @Id
-    @Column(length = 30, name = "user_id")
+    @Column(length = 30)
     private String id;
 
-    @Column(nullable = false, length = 255, name = "user_pw")
+    @Column(nullable = false, length = 255)
     private String password;
 
-    @Column(nullable = false, length = 30, name = "user_name")
+    @Column(nullable = false, length = 30)
     private String name;
 
     public static User create(String id, String password, String name) {

@@ -14,20 +14,19 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private Long id;
 
-    @Column(nullable = false, name = "post_title")
+    @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false, name = "post_content")
+    @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false, name = "post_date")
-    private LocalDateTime postDate;
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 
-    @Column(nullable = false, name = "post_edit_date")
-    private LocalDateTime editDate;
+    @Column(nullable = false)
+    private LocalDateTime updateAt;
 
     // FK
     @ManyToOne(fetch = FetchType.EAGER)
@@ -38,8 +37,8 @@ public class Post {
         Post post = new Post();
         post.title = title;
         post.content = content;
-        post.postDate = LocalDateTime.now();
-        post.editDate = LocalDateTime.now();
+        post.createAt = LocalDateTime.now();
+        post.updateAt = LocalDateTime.now();
         post.user = user;
         return post;
     }

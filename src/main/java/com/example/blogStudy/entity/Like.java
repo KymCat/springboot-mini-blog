@@ -20,11 +20,10 @@ import java.time.LocalDateTime;
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "like_id")
     private Long id;
 
-    @Column(nullable = false, name = "like_date")
-    private LocalDateTime likeDate;
+    @Column(nullable = false)
+    private LocalDateTime createAt;
 
     // FK
     @ManyToOne(fetch = FetchType.LAZY)
@@ -38,7 +37,7 @@ public class Like {
 
     @Builder
     public Like(User user, Post post) {
-        this.likeDate = LocalDateTime.now();
+        this.createAt = LocalDateTime.now();
         this.user = user;
         this.post = post;
     }
