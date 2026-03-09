@@ -13,14 +13,14 @@ public class CommentResponseDto {
     private String content;
     private LocalDateTime commentDate;
     private String user_id;
-    private String user_name;
+    private String name;
     private Long post_id;
 
     public static CommentResponseDto from(Comment comment) {
         return new CommentResponseDto(
           comment.getId(),
           comment.getContent(),
-          comment.getCommentDate(),
+          comment.getCreatedAt(),
           comment.getUser().getId(),
           comment.getUser().getName(),
           comment.getPost().getId()

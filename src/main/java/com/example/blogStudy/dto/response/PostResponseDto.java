@@ -15,7 +15,7 @@ public class PostResponseDto {
     private LocalDateTime postDate;
     private LocalDateTime editDate;
     private String userId;
-    private String UserName;
+    private String name;
 
     // Entity -> DTO
     public static PostResponseDto from(Post post) {
@@ -23,8 +23,8 @@ public class PostResponseDto {
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),
-                post.getPostDate(),
-                post.getEditDate(),
+                post.getCreatedAt(),
+                post.getUpdatedAt(),
                 post.getUser().getId(), // 엔티티 에서 필요한 정보만
                 post.getUser().getName()
         );

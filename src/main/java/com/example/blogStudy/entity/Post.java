@@ -1,5 +1,6 @@
 package com.example.blogStudy.entity;
 
+import com.example.blogStudy.entity.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -11,7 +12,7 @@ import java.time.LocalDateTime;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "post")
-public class Post {
+public class Post extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,11 +23,6 @@ public class Post {
     @Column(nullable = false)
     private String content;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
 
     // FK
     @ManyToOne(fetch = FetchType.EAGER)
@@ -37,8 +33,6 @@ public class Post {
         Post post = new Post();
         post.title = title;
         post.content = content;
-        post.createdAt = LocalDateTime.now();
-        post.updatedAt = LocalDateTime.now();
         post.user = user;
         return post;
     }
