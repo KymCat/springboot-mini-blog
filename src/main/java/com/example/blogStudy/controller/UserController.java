@@ -16,16 +16,19 @@ import java.util.List;
 public class UserController {
     private final UserService userService;
 
+    // 유저 전체 조회
     @GetMapping("/users")
     public List<UserResponseDto> getUsers() {
         return userService.getUsers();
     }
 
+    // 해당 id 유저 조회
     @GetMapping("/users/{id}")
     public UserResponseDto getUserById(@PathVariable String id) {
         return userService.getUserById(id);
     }
 
+    // 유저 계정 생성
     @PostMapping("/users")
     public ResponseEntity<UserResponseDto> createUser(@RequestBody UserCreateDto dto) {
         UserResponseDto created = userService.createUser(dto);
@@ -35,6 +38,7 @@ public class UserController {
                 .body(created);
     }
 
+    // 유저 정보 수정 (비밀번호, 닉네임)
     @PatchMapping("/users/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable String id, @RequestBody UserUpdateDto dto) {
         UserResponseDto updated = userService.updateUser(id, dto);
@@ -42,6 +46,7 @@ public class UserController {
         return ResponseEntity.ok(updated);
     }
 
+    // 유저 계정 삭제
     @DeleteMapping("/users/{id}")
     public ResponseEntity<UserResponseDto> deleteUser(@PathVariable String id) {
         userService.deleteUser(id);

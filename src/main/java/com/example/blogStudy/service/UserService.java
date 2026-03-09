@@ -25,7 +25,7 @@ public class UserService {
                 .toList();
     }
 
-    // 유저 한명 조회
+    // 해당 id 유저 조회
     @Transactional(readOnly = true)
     public UserResponseDto getUserById(String id) {
         User user = userRepository.findById(id)
