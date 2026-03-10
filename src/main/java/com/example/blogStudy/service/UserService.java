@@ -4,6 +4,8 @@ import com.example.blogStudy.dto.create.UserCreateDto;
 import com.example.blogStudy.dto.response.UserResponseDto;
 import com.example.blogStudy.dto.update.UserUpdateDto;
 import com.example.blogStudy.entity.User;
+import com.example.blogStudy.exception.CustomException;
+import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +31,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public UserResponseDto getUserById(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User Not Found : " + id));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         return UserResponseDto.from(user);
     }
@@ -38,7 +40,7 @@ public class UserService {
     @Transactional
     public UserResponseDto createUser(UserCreateDto dto) {
         if(userRepository.existsById(dto.getId()))
-            throw new IllegalArgumentException("Exist ID");
+            throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
 
         User saved = userRepository.save(dto.toEntity());
         return UserResponseDto.from(saved);
@@ -48,7 +50,7 @@ public class UserService {
     @Transactional
     public UserResponseDto updateUser(String id, UserUpdateDto dto) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User Not Found : " + id));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         user.update(dto);
         return UserResponseDto.from(user);
@@ -58,7 +60,7 @@ public class UserService {
     @Transactional
     public void deleteUser(String id) {
         User user = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("User Not Found : " + id));
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         userRepository.delete(user);
     }
