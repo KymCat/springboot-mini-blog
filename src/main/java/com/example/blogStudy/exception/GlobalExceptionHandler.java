@@ -1,22 +1,27 @@
 package com.example.blogStudy.exception;
 
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+@Slf4j
 @RestControllerAdvice   // 프로젝트 전체 Controller 에서 발생하는 예외 처리 클래스
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)    // CustomException 발생 시 메서드 실행
-    public ResponseEntity<ErrorResponseDto> handleCustomException(CustomException e) {
+    public ResponseEntity<ErrorResponseDto> handleCustomException(
+            CustomException e,
+            HttpServletRequest request
+    ) {
 
         ErrorCode errorCode = e.getErrorCode();
+        log.warn("비지니스 예외, code={}, path={}",
+                errorCode.getCode(), request.getRequestURI());
 
-        ErrorResponseDto responseDto = new ErrorResponseDto(
-                errorCode.getCode(),
-                errorCode.getMessage()
-        );
-
-        return new ResponseEntity<>(responseDto, errorCode.getStatus());
+        return ResponseEntity
+                .status(errorCode.getStatus())
+                .body(ErrorResponseDto.of(errorCode, request.getRequestURI()));
     }
 }
