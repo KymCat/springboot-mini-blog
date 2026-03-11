@@ -1,12 +1,15 @@
 package com.example.blogStudy.service;
 
 import com.example.blogStudy.dto.create.PostCreate;
+import com.example.blogStudy.dto.response.CommentResponse;
+import com.example.blogStudy.dto.response.PostDetailResponse;
 import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.entity.Post;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
+import com.example.blogStudy.repository.CommentRepository;
 import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +22,7 @@ import java.util.List;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final CommentRepository commentRepository;
 
     // 세션 (임시)
     private User session = User.create(
@@ -34,11 +38,15 @@ public class PostService {
     }
 
     // 게시글 단일 조회
-    public PostResponse getPost(Long id) {
+    public PostDetailResponse getPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        return PostResponse.from(post);
+        List<CommentResponse> comments = commentRepository.findByPost(id).stream()
+                .map(CommentResponse::from)
+                .toList();
+
+        return PostDetailResponse.from(post, comments);
     }
 
     // 게시글 작성

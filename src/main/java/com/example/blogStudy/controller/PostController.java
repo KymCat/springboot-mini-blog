@@ -1,6 +1,7 @@
 package com.example.blogStudy.controller;
 
 import com.example.blogStudy.dto.create.PostCreate;
+import com.example.blogStudy.dto.response.PostDetailResponse;
 import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.service.PostService;
@@ -25,7 +26,7 @@ public class PostController {
 
     // 게시글 단일 조회
     @GetMapping("/post/{id}")
-    public PostResponse getPost(@PathVariable Long id) {
+    public PostDetailResponse getPost(@PathVariable Long id) {
         return postService.getPost(id);
     }
 
