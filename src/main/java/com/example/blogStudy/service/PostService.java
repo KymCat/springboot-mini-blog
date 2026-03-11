@@ -48,7 +48,7 @@ public class PostService {
         int likeCount = likeRepository.countByPostId(id);
 
         // 댓글 가져오기
-        List<CommentResponse> comments = commentRepository.findByPost(id).stream()
+        List<CommentResponse> comments = commentRepository.findByPostId(id).stream()
                 .map(CommentResponse::from)
                 .toList();
 
