@@ -1,5 +1,6 @@
 package com.example.blogStudy.entity;
 
+import com.example.blogStudy.dto.update.PostUpdateDto;
 import com.example.blogStudy.entity.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
@@ -35,6 +36,11 @@ public class Post extends BaseTimeEntity {
         post.content = content;
         post.user = user;
         return post;
+    }
+
+    public void update(PostUpdateDto dto) {
+        this.content = dto.getContent();
+        this.title = dto.getTitle();
     }
 }
 
