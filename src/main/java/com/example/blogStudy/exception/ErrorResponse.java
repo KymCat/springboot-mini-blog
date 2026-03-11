@@ -9,10 +9,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class ErrorResponse {
     LocalDateTime timestamp;
-    int status;
-    private String code;
-    private String message;
-    String path;
+    int status;                 // HttpStatus
+    private String code;        // Enum Code
+    private String message;     // Enum message
+    String path;                // request URI
 
 
     public static ErrorResponse of(ErrorCode errorCode, String path) {
