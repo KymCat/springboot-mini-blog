@@ -18,9 +18,10 @@ public class PostDetailResponse {
     private String userId;
     private String name;
 
+    private int likeCount;
     private List<CommentResponse> comments;
 
-    public static PostDetailResponse from(Post post, List<CommentResponse> comments) {
+    public static PostDetailResponse from(Post post, int likeCount, List<CommentResponse> comments) {
         return new PostDetailResponse(
                 post.getId(),
                 post.getTitle(),
@@ -29,6 +30,7 @@ public class PostDetailResponse {
                 post.getUpdatedAt(),
                 post.getUser().getId(),
                 post.getUser().getName(),
+                likeCount,
                 comments
         );
     }

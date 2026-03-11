@@ -10,6 +10,7 @@ import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.CommentRepository;
+import com.example.blogStudy.repository.LikeRepository;
 import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final CommentRepository commentRepository;
+    private final LikeRepository likeRepository;
 
     // 세션 (임시)
     private User session = User.create(
@@ -42,11 +44,15 @@ public class PostService {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
+        // 좋아요 갯수 가져오기
+        int likeCount = likeRepository.countByPostId(id);
+
+        // 댓글 가져오기
         List<CommentResponse> comments = commentRepository.findByPost(id).stream()
                 .map(CommentResponse::from)
                 .toList();
 
-        return PostDetailResponse.from(post, comments);
+        return PostDetailResponse.from(post, likeCount, comments);
     }
 
     // 게시글 작성
