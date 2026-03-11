@@ -7,7 +7,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class PostCreateDto {
+public class PostCreate {
     private String title;
     private String content;
 

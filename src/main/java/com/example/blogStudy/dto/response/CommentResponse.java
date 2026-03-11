@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class CommentResponseDto {
+public class CommentResponse {
     private Long id;
     private String content;
     private LocalDateTime commentDate;
@@ -16,8 +16,8 @@ public class CommentResponseDto {
     private String name;
     private Long post_id;
 
-    public static CommentResponseDto from(Comment comment) {
-        return new CommentResponseDto(
+    public static CommentResponse from(Comment comment) {
+        return new CommentResponse(
           comment.getId(),
           comment.getContent(),
           comment.getCreatedAt(),

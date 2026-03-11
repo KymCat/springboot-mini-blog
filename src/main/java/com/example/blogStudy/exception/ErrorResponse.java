@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class ErrorResponseDto {
+public class ErrorResponse {
     LocalDateTime timestamp;
     int status;
     private String code;
@@ -15,8 +15,8 @@ public class ErrorResponseDto {
     String path;
 
 
-    public static ErrorResponseDto of(ErrorCode errorCode, String path) {
-        return new ErrorResponseDto(
+    public static ErrorResponse of(ErrorCode errorCode, String path) {
+        return new ErrorResponse(
                 LocalDateTime.now(),
                 errorCode.getStatus().value(),
                 errorCode.getCode(),

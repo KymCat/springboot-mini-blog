@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)    // CustomException 발생 시 메서드 실행
-    public ResponseEntity<ErrorResponseDto> handleCustomException(
+    public ResponseEntity<ErrorResponse> handleCustomException(
             CustomException e,
             HttpServletRequest request
     ) {
@@ -23,12 +23,12 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(errorCode.getStatus())
-                .body(ErrorResponseDto.of(errorCode, request.getRequestURI()));
+                .body(ErrorResponse.of(errorCode, request.getRequestURI()));
     }
 
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErrorResponseDto> handleException(
+    public ResponseEntity<ErrorResponse> handleException(
             Exception e,
             HttpServletRequest request
     ) {
@@ -36,7 +36,7 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity
                 .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(ErrorResponseDto.of(
+                .body(ErrorResponse.of(
                         ErrorCode.INTERNAL_SERVER_ERROR,
                         request.getRequestURI()
                 ));

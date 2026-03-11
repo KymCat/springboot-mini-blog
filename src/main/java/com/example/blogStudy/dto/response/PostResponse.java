@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
-public class PostResponseDto {
+public class PostResponse {
     private Long id;
     private String title;
     private String content;
@@ -18,8 +18,8 @@ public class PostResponseDto {
     private String name;
 
     // Entity -> DTO
-    public static PostResponseDto from(Post post) {
-        return new PostResponseDto(
+    public static PostResponse from(Post post) {
+        return new PostResponse(
                 post.getId(),
                 post.getTitle(),
                 post.getContent(),

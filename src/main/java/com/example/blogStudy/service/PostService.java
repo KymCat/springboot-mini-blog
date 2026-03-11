@@ -1,9 +1,8 @@
 package com.example.blogStudy.service;
 
-import com.example.blogStudy.controller.PostController;
-import com.example.blogStudy.dto.create.PostCreateDto;
-import com.example.blogStudy.dto.response.PostResponseDto;
-import com.example.blogStudy.dto.update.PostUpdateDto;
+import com.example.blogStudy.dto.create.PostCreate;
+import com.example.blogStudy.dto.response.PostResponse;
+import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.entity.Post;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
@@ -28,35 +27,35 @@ public class PostService {
             "김민수");
 
     // 게시글 전체 조회
-    public List<PostResponseDto> getPosts() {
+    public List<PostResponse> getPosts() {
         return postRepository.findAllWithUser().stream()
-                .map(PostResponseDto::from)
+                .map(PostResponse::from)
                 .toList();
     }
 
     // 게시글 단일 조회
-    public PostResponseDto getPost(Long id) {
+    public PostResponse getPost(Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        return PostResponseDto.from(post);
+        return PostResponse.from(post);
     }
 
     // 게시글 작성
     @Transactional
-    public PostResponseDto createPost(PostCreateDto dto) {
+    public PostResponse createPost(PostCreate dto) {
         Post saved = postRepository.save(dto.toEntity(session));    // 실제 서비스에는 진짜 session 이 들어감
-        return  PostResponseDto.from(saved);
+        return  PostResponse.from(saved);
     }
 
     // 게시글 수정
     @Transactional
-    public PostResponseDto updatePost(Long id, PostUpdateDto dto) {
+    public PostResponse updatePost(Long id, PostUpdate dto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
         post.update(dto);
-        return PostResponseDto.from(post);
+        return PostResponse.from(post);
     }
 
     // 게시글 삭제

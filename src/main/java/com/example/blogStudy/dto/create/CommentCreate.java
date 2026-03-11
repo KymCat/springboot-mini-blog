@@ -6,11 +6,9 @@ import com.example.blogStudy.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.time.LocalDateTime;
-
 @Getter
 @AllArgsConstructor
-public class CommentCreateDto {
+public class CommentCreate {
     private String content;
 
     public Comment toEntity(User user, Post post) {

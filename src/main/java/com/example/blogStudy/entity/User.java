@@ -1,10 +1,8 @@
 package com.example.blogStudy.entity;
 
-import com.example.blogStudy.dto.update.UserUpdateDto;
+import com.example.blogStudy.dto.update.UserUpdate;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.util.List;
 
 @Entity
 @Getter
@@ -29,7 +27,7 @@ public class User {
         return user;
     }
 
-    public void update(UserUpdateDto dto) {
+    public void update(UserUpdate dto) {
         this.name = dto.getName();
         this.password = dto.getPassword();
     }

@@ -1,13 +1,11 @@
 package com.example.blogStudy.entity;
 
-import com.example.blogStudy.dto.update.PostUpdateDto;
+import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.entity.base.BaseTimeEntity;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -38,7 +36,7 @@ public class Post extends BaseTimeEntity {
         return post;
     }
 
-    public void update(PostUpdateDto dto) {
+    public void update(PostUpdate dto) {
         this.content = dto.getContent();
         this.title = dto.getTitle();
     }

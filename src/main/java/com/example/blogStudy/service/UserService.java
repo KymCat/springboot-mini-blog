@@ -1,13 +1,12 @@
 package com.example.blogStudy.service;
 
-import com.example.blogStudy.dto.create.UserCreateDto;
-import com.example.blogStudy.dto.response.UserResponseDto;
-import com.example.blogStudy.dto.update.UserUpdateDto;
+import com.example.blogStudy.dto.create.UserCreate;
+import com.example.blogStudy.dto.response.UserResponse;
+import com.example.blogStudy.dto.update.UserUpdate;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,39 +20,39 @@ public class UserService {
 
     // 유저 전체 조회
     @Transactional(readOnly = true)
-    public List<UserResponseDto> getUsers() {
+    public List<UserResponse> getUsers() {
         return userRepository.findAll().stream()
-                .map(UserResponseDto::from)
+                .map(UserResponse::from)
                 .toList();
     }
 
     // 해당 id 유저 조회
     @Transactional(readOnly = true)
-    public UserResponseDto getUserById(String id) {
+    public UserResponse getUserById(String id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        return UserResponseDto.from(user);
+        return UserResponse.from(user);
     }
 
     // 유저 계정 생성
     @Transactional
-    public UserResponseDto createUser(UserCreateDto dto) {
+    public UserResponse createUser(UserCreate dto) {
         if(userRepository.existsById(dto.getId()))
             throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
 
         User saved = userRepository.save(dto.toEntity());
-        return UserResponseDto.from(saved);
+        return UserResponse.from(saved);
     }
 
     // 유저 계정 수정
     @Transactional
-    public UserResponseDto updateUser(String id, UserUpdateDto dto) {
+    public UserResponse updateUser(String id, UserUpdate dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         user.update(dto);
-        return UserResponseDto.from(user);
+        return UserResponse.from(user);
     }
 
     // 유저 계정 삭제

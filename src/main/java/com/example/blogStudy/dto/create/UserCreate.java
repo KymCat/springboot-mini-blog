@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class UserCreateDto {
+public class UserCreate {
     private String id;
     private String password;
     private String name;
