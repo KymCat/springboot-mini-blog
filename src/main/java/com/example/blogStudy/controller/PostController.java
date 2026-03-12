@@ -6,6 +6,10 @@ import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.service.PostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,8 +24,11 @@ public class PostController {
 
     // 게시글 전체 조회
     @GetMapping("/posts")
-    public List<PostResponse> getPosts() {
-        return postService.getPosts();
+    public Page<PostResponse> getPosts(
+            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
+            Pageable pageable)
+    {
+        return postService.getPosts(pageable);
     }
 
     // 게시글 단일 조회

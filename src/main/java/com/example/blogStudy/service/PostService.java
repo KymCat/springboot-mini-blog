@@ -14,6 +14,8 @@ import com.example.blogStudy.repository.LikeRepository;
 import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,10 +35,9 @@ public class PostService {
             "김민수");
 
     // 게시글 전체 조회
-    public List<PostResponse> getPosts() {
-        return postRepository.findAllWithUser().stream()
-                .map(PostResponse::from)
-                .toList();
+    public Page<PostResponse> getPosts(Pageable pageable) {
+        return postRepository.findAllWithUser(pageable)
+                .map(PostResponse::from);
     }
 
     // 게시글 단일 조회
