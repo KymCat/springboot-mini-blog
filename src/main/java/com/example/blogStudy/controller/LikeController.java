@@ -20,7 +20,7 @@ public class LikeController {
         return ResponseEntity.ok(likeService.likes(postId));
     }
 
-    // 게시글 좋아요 설정
+    // 게시글 좋아요 생성
     @PostMapping("/posts/{postId}/likes")
     ResponseEntity<Void> likePost(@PathVariable Long postId) {
         likeService.likePost(postId);
