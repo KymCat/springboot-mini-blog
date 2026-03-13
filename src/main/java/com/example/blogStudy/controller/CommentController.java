@@ -5,9 +5,6 @@ import com.example.blogStudy.dto.response.CommentResponse;
 import com.example.blogStudy.dto.update.CommentUpdate;
 import com.example.blogStudy.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,23 +17,18 @@ public class CommentController {
 
     private final CommentService commentService;
 
-    // 댓글 전체 조회
-    @GetMapping("/comments")
-    public ResponseEntity<PagedModel<CommentResponse>> getComments(
-            @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
-            Pageable pageable)
+    // id 해당 게시글 댓글 조회
+    @GetMapping("/posts/{id}/comments")
+    public PagedModel<CommentResponse> getComments(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page)
     {
-        return ResponseEntity.ok(commentService.getComments(pageable));
+        return commentService.getComments(id,page);
     }
 
-    // 댓글 단일 조회
-    @GetMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> getComment(@PathVariable Long id) {
-        return ResponseEntity.ok(commentService.getComment(id));
-    }
 
     // 댓글 작성
-    @PostMapping("/comments/{postId}")
+    @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentCreate dto) {
         CommentResponse created = commentService.createComment(postId, dto);
 
@@ -45,6 +37,7 @@ public class CommentController {
                 .body(created);
     }
 
+
     // 댓글 수정
     @PatchMapping("/comments/{id}")
     public ResponseEntity<CommentResponse> updateComment(@PathVariable Long id, @RequestBody CommentUpdate dto) {
@@ -52,6 +45,7 @@ public class CommentController {
 
         return ResponseEntity.ok(updated);
     }
+
 
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")

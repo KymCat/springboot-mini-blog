@@ -12,8 +12,9 @@ import com.example.blogStudy.repository.CommentRepository;
 import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
@@ -32,21 +33,20 @@ public class CommentService {
             "김민수");
 
 
-    // 댓글 전체 조회
-    public PagedModel<CommentResponse> getComments(Pageable pageable) {
-        Page<Comment> comments = commentRepository.findAllWithUser(pageable);
+    // id 해당 게시글 댓글 조회
+    public PagedModel<CommentResponse> getComments(Long id, int page) {
+        Pageable pageable = PageRequest.of(
+                page,
+                3,
+                Sort.by("createdAt").descending());
 
-        return new PagedModel<>(comments.map(CommentResponse::from));
+        // Page => PagedModel : Page 타입보다 안정적인 구조인 PagedModel 반환 권장
+        return new PagedModel<>(
+                commentRepository.findByPostId(id,pageable)
+                        .map(CommentResponse::from));
 
     }
 
-    // 댓글 단일 조회
-    public CommentResponse getComment(Long id) {
-        Comment comment = commentRepository.findById(id)
-                .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
-
-        return CommentResponse.from(comment);
-    }
 
     // 댓글 작성
     @Transactional
@@ -59,15 +59,18 @@ public class CommentService {
         return CommentResponse.from(comment);
     }
 
+
     // 댓글 수정
     @Transactional
     public CommentResponse updateComment(Long id, CommentUpdate dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
+        comment.validateOwner(session.getId()); // 권한 확인
         comment.update(dto);
         return CommentResponse.from(comment);
     }
+
 
     // 댓글 삭제
     @Transactional
@@ -75,6 +78,7 @@ public class CommentService {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
+        comment.validateOwner(session.getId());
         commentRepository.delete(comment);
     }
 }

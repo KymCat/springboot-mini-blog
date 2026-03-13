@@ -2,6 +2,8 @@ package com.example.blogStudy.entity;
 
 import com.example.blogStudy.dto.update.CommentUpdate;
 import com.example.blogStudy.entity.base.BaseTimeEntity;
+import com.example.blogStudy.exception.CustomException;
+import com.example.blogStudy.exception.ErrorCode;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -42,5 +44,10 @@ public class Comment extends BaseTimeEntity {
 
     public void update(CommentUpdate dto) {
         this.content = dto.getContent();
+    }
+
+    public void validateOwner(String userId) {
+        if (!this.user.getId().equals(userId))
+            throw new CustomException(ErrorCode.COMMENT_FORBIDDEN);
     }
 }

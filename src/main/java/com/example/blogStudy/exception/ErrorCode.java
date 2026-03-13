@@ -17,6 +17,7 @@ public enum ErrorCode {
 
     // Comment Exception
     COMMENT_NOT_FOUND   (HttpStatus.NOT_FOUND, "COMMENT-001", "해당 댓글을 찾을 수 없습니다."),
+    COMMENT_FORBIDDEN   (HttpStatus.FORBIDDEN, "COMMENT-002", "해당 댓글에 대한 권한이 없습니다."),
 
     // System Exception
     INTERNAL_SERVER_ERROR
