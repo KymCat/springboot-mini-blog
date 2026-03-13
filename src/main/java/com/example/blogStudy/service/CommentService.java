@@ -14,6 +14,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -33,9 +34,10 @@ public class CommentService {
 
 
     // 댓글 전체 조회
-    public Page<CommentResponse> getComments(Pageable pageable) {
+    public PagedModel<CommentResponse> getComments(Pageable pageable) {
         Page<Comment> comments = commentRepository.findAllWithUser(pageable);
-        return comments.map(CommentResponse::from);
+
+        return new PagedModel<>(comments.map(CommentResponse::from));
 
     }
 

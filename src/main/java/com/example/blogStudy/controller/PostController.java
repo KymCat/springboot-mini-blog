@@ -25,7 +25,7 @@ public class PostController {
 
     // 게시글 전체 조회
     @GetMapping("/posts")
-    public Page<PostResponse> getPosts(
+    public PagedModel<PostResponse> getPosts(
             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
             Pageable pageable)
     {

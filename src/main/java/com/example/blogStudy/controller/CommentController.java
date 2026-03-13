@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,9 +23,10 @@ public class CommentController {
 
     // 댓글 전체 조회
     @GetMapping("/comments")
-    public ResponseEntity<Page<CommentResponse>> getComments(
+    public ResponseEntity<PagedModel<CommentResponse>> getComments(
             @PageableDefault(size = 5, sort = "createdAt", direction = Sort.Direction.DESC)
-            Pageable pageable) {
+            Pageable pageable)
+    {
         return ResponseEntity.ok(commentService.getComments(pageable));
     }
 

@@ -38,9 +38,10 @@ public class PostService {
             "김민수");
 
     // 게시글 전체 조회
-    public Page<PostResponse> getPosts(Pageable pageable) {
-        return postRepository.findAllWithUser(pageable)
-                .map(PostResponse::from);
+    public PagedModel<PostResponse> getPosts(Pageable pageable) {
+        return new PagedModel<>(
+                postRepository.findAllWithUser(pageable)
+                        .map(PostResponse::from));
     }
 
     // 게시글 단일 조회
@@ -64,7 +65,7 @@ public class PostService {
         // Page => PagedModel : Page 타입보다 안정적인 구조인 PagedModel 반환 권장
         return new PagedModel<>(
                 commentRepository.findByPostId(id,pageable)
-                .map(CommentResponse::from));
+                        .map(CommentResponse::from));
     }
 
     // 게시글 작성
