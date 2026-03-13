@@ -5,7 +5,6 @@ import com.example.blogStudy.dto.response.CommentResponse;
 import com.example.blogStudy.dto.update.CommentUpdate;
 import com.example.blogStudy.service.CommentService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
