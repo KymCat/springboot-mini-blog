@@ -15,7 +15,10 @@ import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PagedModel;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -48,12 +51,20 @@ public class PostService {
         // 좋아요 갯수 가져오기
         int likeCount = likeRepository.countByPostId(id);
 
-        // 댓글 가져오기
-        List<CommentResponse> comments = commentRepository.findByPostId(id).stream()
-                .map(CommentResponse::from)
-                .toList();
+        return PostDetailResponse.from(post, likeCount);
+    }
 
-        return PostDetailResponse.from(post, likeCount, comments);
+    // id 해당 게시글 댓글 조회
+    public PagedModel<CommentResponse> getComments(Long id, int page) {
+        Pageable pageable = PageRequest.of(
+                page,
+                3,
+                Sort.by("createdAt").descending());
+
+        // Page => PagedModel : Page 타입보다 안정적인 구조인 PagedModel 반환 권장
+        return new PagedModel<>(
+                commentRepository.findByPostId(id,pageable)
+                .map(CommentResponse::from));
     }
 
     // 게시글 작성
@@ -81,4 +92,5 @@ public class PostService {
 
         postRepository.delete(post);
     }
+
 }

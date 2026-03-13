@@ -1,6 +1,7 @@
 package com.example.blogStudy.controller;
 
 import com.example.blogStudy.dto.create.PostCreate;
+import com.example.blogStudy.dto.response.CommentResponse;
 import com.example.blogStudy.dto.response.PostDetailResponse;
 import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
@@ -10,6 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +36,15 @@ public class PostController {
     @GetMapping("/posts/{id}")
     public PostDetailResponse getPost(@PathVariable Long id) {
         return postService.getPost(id);
+    }
+
+    // id 해당 게시글 댓글 조회
+    @GetMapping("/posts/{id}/comments")
+    public PagedModel<CommentResponse> getComments(
+            @PathVariable Long id,
+            @RequestParam(defaultValue = "0") int page)
+    {
+        return postService.getComments(id,page);
     }
 
     // 게시글 작성
