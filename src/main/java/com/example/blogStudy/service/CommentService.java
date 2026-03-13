@@ -12,6 +12,8 @@ import com.example.blogStudy.repository.CommentRepository;
 import com.example.blogStudy.repository.PostRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -31,11 +33,10 @@ public class CommentService {
 
 
     // 댓글 전체 조회
-    public List<CommentResponse> getComments() {
-        List<Comment> comments = commentRepository.findAllWithUser();
-        return comments.stream()
-                .map(CommentResponse::from)
-                .toList();
+    public Page<CommentResponse> getComments(Pageable pageable) {
+        Page<Comment> comments = commentRepository.findAllWithUser(pageable);
+        return comments.map(CommentResponse::from);
+
     }
 
     // 댓글 단일 조회
