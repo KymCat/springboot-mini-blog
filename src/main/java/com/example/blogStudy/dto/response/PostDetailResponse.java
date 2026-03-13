@@ -13,8 +13,8 @@ public class PostDetailResponse {
     private Long id;
     private String title;
     private String content;
-    private LocalDateTime postDate;
-    private LocalDateTime editDate;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private String userId;
     private String name;
 
