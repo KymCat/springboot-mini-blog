@@ -35,10 +35,12 @@ public class Like {
     private Post post;
 
 
-    @Builder
-    public Like(User user, Post post) {
-        this.createdAt = LocalDateTime.now();
-        this.user = user;
-        this.post = post;
+    public static Like create(User user, Post post) {
+        Like like = new Like();
+        like.createdAt =  LocalDateTime.now();
+        like.user = user;
+        like.post = post;
+
+        return like;
     }
 }
