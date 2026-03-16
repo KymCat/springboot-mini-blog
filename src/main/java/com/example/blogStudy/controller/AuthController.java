@@ -1,6 +1,5 @@
 package com.example.blogStudy.controller;
 
-import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.jwt.JwtTokenResponse;
 import com.example.blogStudy.service.AuthService;

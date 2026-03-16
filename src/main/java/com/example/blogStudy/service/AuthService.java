@@ -1,6 +1,5 @@
 package com.example.blogStudy.service;
 
-import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
