@@ -16,14 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController {
     private final AuthService authService;
 
-    @PostMapping("/login")
+    @PostMapping("/auth/login")
     public ResponseEntity<JwtTokenResponse> login(@RequestBody UserRequest dto) {
         JwtTokenResponse result = authService.login(dto);
 
         return ResponseEntity.ok(result);
     }
 
-    @PostMapping("/reissue")
+    @PostMapping("/auth/reissue")
     public ResponseEntity<JwtTokenResponse> reissue(@RequestBody ReissueRequest dto) {
         JwtTokenResponse result = authService.reissue(dto.getRefreshToken());
 
