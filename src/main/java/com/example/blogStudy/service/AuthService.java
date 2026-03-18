@@ -41,16 +41,16 @@ public class AuthService {
 
 
     // refresh token 재발행
-    public JwtTokenResponse reissue(ReissueRequest dto) {
+    public JwtTokenResponse reissue(String token) {
         // refresh token 검증
-        if(!jwtProvider.validateToken(dto.getRefreshToken()))
+        if(Boolean.FALSE.equals(jwtProvider.validateToken(token)))
             throw new CustomException(ErrorCode.INVALID_TOKEN);
 
         // dto 데이터에서 user id 추출
-        String userId = jwtProvider.getUserId(dto.getRefreshToken());
+        String userId = jwtProvider.getUserId(token);
 
         // redis refresh token 과 비교
-        if(!refreshTokenService.isValid(userId, dto.getRefreshToken()))
+        if(Boolean.FALSE.equals(refreshTokenService.isValid(userId, token)))
             throw new CustomException(ErrorCode.INVALID_TOKEN);
 
         // access, refresh 재발행
