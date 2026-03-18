@@ -1,5 +1,6 @@
 package com.example.blogStudy.service;
 
+import com.example.blogStudy.dto.request.ReissueRequest;
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
@@ -31,6 +32,34 @@ public class AuthService {
 
         refreshTokenService.save(
                 user.getId(),
+                refreshToken,
+                jwtProperties.getRefreshTokenExpiration()
+        );
+
+        return new JwtTokenResponse(accessToken, refreshToken);
+    }
+
+
+    // refresh token 재발행
+    public JwtTokenResponse reissue(ReissueRequest dto) {
+        // refresh token 검증
+        if(!jwtProvider.validateToken(dto.getRefreshToken()))
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+
+        // dto 데이터에서 user id 추출
+        String userId = jwtProvider.getUserId(dto.getRefreshToken());
+
+        // redis refresh token 과 비교
+        if(!refreshTokenService.isValid(userId, dto.getRefreshToken()))
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+
+        // access, refresh 재발행
+        String accessToken = jwtProvider.createAccessToken(userId);
+        String refreshToken = jwtProvider.createRefreshToken(userId);
+
+        // redis 에 저장
+        refreshTokenService.save(
+                userId,
                 refreshToken,
                 jwtProperties.getRefreshTokenExpiration()
         );

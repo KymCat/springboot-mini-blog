@@ -10,15 +10,18 @@ public enum ErrorCode {
     // User Exception
     USER_NOT_FOUND      (HttpStatus.NOT_FOUND, "USER-001", "사용자를 찾을 수 없습니다."),
     DUPLICATE_USER_ID   (HttpStatus.BAD_REQUEST, "USER-002","이미 존재하는 ID 입니다."),
-    INVALID_PASSWORD(HttpStatus.UNAUTHORIZED, "USER-003", "비밀번호가 일치하지 않습니다."),
+    INVALID_PASSWORD    (HttpStatus.UNAUTHORIZED, "USER-003", "비밀번호가 일치하지 않습니다."),
 
     // Post Exception
-    POST_NOT_FOUND  (HttpStatus.NOT_FOUND, "POST-001", "해당 게시글을 찾을 수 없습니다."),
-    DUPLICATE_POST_ID(HttpStatus.BAD_REQUEST, "POST-002", "이미 존재하는 게시글 ID 입니다."),
+    POST_NOT_FOUND      (HttpStatus.NOT_FOUND, "POST-001", "해당 게시글을 찾을 수 없습니다."),
+    DUPLICATE_POST_ID   (HttpStatus.BAD_REQUEST, "POST-002", "이미 존재하는 게시글 ID 입니다."),
 
     // Comment Exception
     COMMENT_NOT_FOUND   (HttpStatus.NOT_FOUND, "COMMENT-001", "해당 댓글을 찾을 수 없습니다."),
     COMMENT_FORBIDDEN   (HttpStatus.FORBIDDEN, "COMMENT-002", "해당 댓글에 대한 권한이 없습니다."),
+
+    // Jwt Exception
+    INVALID_TOKEN   (HttpStatus.UNAUTHORIZED, "JWT-001", "유효하지 않은 토큰 입니다."),
 
     // System Exception
     INTERNAL_SERVER_ERROR

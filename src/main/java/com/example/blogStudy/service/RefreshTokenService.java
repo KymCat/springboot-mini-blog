@@ -10,10 +10,11 @@ import java.util.concurrent.TimeUnit;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
+    private final String PREFIX = "refresh:";
     private final StringRedisTemplate stringRedisTemplate;
 
     private String createKey(String userId) {
-        return "refresh:" + userId;
+        return PREFIX + userId;
     }
 
     // refresh 토큰 저장
@@ -40,6 +41,12 @@ public class RefreshTokenService {
     // 로그아웃할 때 삭제
     public void delete(String userId) {
         stringRedisTemplate.delete(createKey(userId));
+    }
+
+    // refresh 토큰 유효 검증
+    public Boolean isValid(String userId, String refreshToken) {
+        String savedToken = findByUserId(userId);
+        return savedToken != null && refreshToken.equals(savedToken);
     }
 
 }
