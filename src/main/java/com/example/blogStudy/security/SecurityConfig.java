@@ -1,6 +1,5 @@
-package com.example.blogStudy.config;
+package com.example.blogStudy.security;
 
-import com.example.blogStudy.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

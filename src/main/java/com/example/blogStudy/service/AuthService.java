@@ -1,6 +1,5 @@
 package com.example.blogStudy.service;
 
-import com.example.blogStudy.dto.request.ReissueRequest;
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
@@ -27,7 +26,7 @@ public class AuthService {
         if(!user.getPassword().equals(dto.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
-        String accessToken = jwtProvider.createAccessToken(user.getId());
+        String accessToken = jwtProvider.createAccessToken(user.getId(), user.getName());
         String refreshToken = jwtProvider.createRefreshToken(user.getId());
 
         refreshTokenService.save(
@@ -48,13 +47,14 @@ public class AuthService {
 
         // dto 데이터에서 user id 추출
         String userId = jwtProvider.getUserId(token);
+        String nickname = jwtProvider.getNickName(token);
 
         // redis refresh token 과 비교
         if(Boolean.FALSE.equals(refreshTokenService.isValid(userId, token)))
             throw new CustomException(ErrorCode.INVALID_TOKEN);
 
         // access, refresh 재발행
-        String accessToken = jwtProvider.createAccessToken(userId);
+        String accessToken = jwtProvider.createAccessToken(userId, nickname);
         String refreshToken = jwtProvider.createRefreshToken(userId);
 
         // redis 에 저장

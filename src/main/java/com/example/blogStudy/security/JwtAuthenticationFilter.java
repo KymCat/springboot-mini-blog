@@ -1,5 +1,6 @@
-package com.example.blogStudy.jwt;
+package com.example.blogStudy.security;
 
+import com.example.blogStudy.jwt.JwtProvider;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -33,11 +34,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             if (jwtProvider.validateToken(token)) {
                 String userId = jwtProvider.getUserId(token);
+                String nickName = jwtProvider.getNickName(token);
+
+                CustomUserDetails customUserDetails = new CustomUserDetails(userId, nickName);
 
                 // Authentication 객체 생성
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
-                                userId,
+                                customUserDetails,
                                 null,   // Password, Jwt 인증은 필요없음
                                 AuthorityUtils.NO_AUTHORITIES   // 권한
                         );

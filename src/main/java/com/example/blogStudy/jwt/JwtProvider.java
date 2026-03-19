@@ -32,13 +32,14 @@ public class JwtProvider {
 
 
     // 사용자 Id를 받아서 Access Token 문자열을 만들어 반환
-    public String createAccessToken(String userId) {
+    public String createAccessToken(String userId, String userName) {
         Date now = new Date();  // 현재 시간
         Date expiration = new Date( // 현재 시간 + Access Token 만료 시간
                 now.getTime() + jwtProperties.getAccessTokenExpiration());
 
         return Jwts.builder()
                 .subject(userId)
+                .claim("nickname", userName)
                 .issuedAt(now)              // iat, 발급일자
                 .expiration(expiration)     // exp, 만료일자
                 .signWith(key)              // key 를 비밀키로 서명
@@ -72,6 +73,11 @@ public class JwtProvider {
     // token 안에서 userId 반환
     public String getUserId(String token) {
         return getClaims(token).getSubject();
+    }
+
+    // token 안에서 nickname 반환
+    public String getNickName(String token) {
+        return getClaims(token).get("nickname", String.class);
     }
 
     // 토큰 검증
