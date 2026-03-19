@@ -28,12 +28,6 @@ public class CommentService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    // 세션 (임시)
-    private User session = User.create(
-            "kim",
-            "pw123",
-            "김민수");
-
 
     // id 해당 게시글 댓글 조회
     public PagedModel<CommentResponse> getComments(Long id, int page) {

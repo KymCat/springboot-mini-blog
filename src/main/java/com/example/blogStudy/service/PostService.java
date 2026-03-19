@@ -15,7 +15,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 
@@ -27,11 +26,6 @@ public class PostService {
     private final UserRepository userRepository;
     private final LikeRepository likeRepository;
 
-    // 세션 (임시)
-    private User session = User.create(
-            "kim",
-            "pw123",
-            "김민수");
 
     // 게시글 전체 조회
     public PagedModel<PostResponse> getPosts(Pageable pageable) {

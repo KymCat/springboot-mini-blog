@@ -19,11 +19,6 @@ public class LikeService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
 
-    // 세션 (임시)
-    private User session = User.create(
-            "kim",
-            "pw123",
-            "김민수");
 
     // 해당 게시글 좋아요 여부
     public Boolean likes(String userId, Long postId) {
