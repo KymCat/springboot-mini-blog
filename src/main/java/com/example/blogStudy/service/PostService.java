@@ -10,10 +10,12 @@ import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.LikeRepository;
 import com.example.blogStudy.repository.PostRepository;
+import com.example.blogStudy.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedModel;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 
@@ -22,6 +24,7 @@ import org.springframework.stereotype.Service;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final UserRepository userRepository;
     private final LikeRepository likeRepository;
 
     // 세션 (임시)
@@ -50,16 +53,22 @@ public class PostService {
 
     // 게시글 작성
     @Transactional
-    public PostResponse createPost(PostCreate dto) {
-        Post saved = postRepository.save(dto.toEntity(session));    // 실제 서비스에는 진짜 session 이 들어감
+    public PostResponse createPost(String userId, PostCreate dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        Post saved = postRepository.save(dto.toEntity(user));    // 실제 서비스에는 진짜 session 이 들어감
         return  PostResponse.from(saved);
     }
 
     // 게시글 수정
     @Transactional
-    public PostResponse updatePost(Long id, PostUpdate dto) {
+    public PostResponse updatePost(String userId, Long id, PostUpdate dto) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        if(!userId.equals(post.getUser().getId()))
+            throw new CustomException(ErrorCode.POST_ACCESS_DENIED);
 
         post.update(dto);
         return PostResponse.from(post);
@@ -67,9 +76,12 @@ public class PostService {
 
     // 게시글 삭제
     @Transactional
-    public void deletePost(Long id) {
+    public void deletePost(String userId, Long id) {
         Post post = postRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
+
+        if(!userId.equals(post.getUser().getId()))
+            throw new CustomException(ErrorCode.POST_ACCESS_DENIED);
 
         postRepository.delete(post);
     }

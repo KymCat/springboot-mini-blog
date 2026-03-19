@@ -15,6 +15,7 @@ public enum ErrorCode {
     // Post Exception
     POST_NOT_FOUND      (HttpStatus.NOT_FOUND, "POST-001", "해당 게시글을 찾을 수 없습니다."),
     DUPLICATE_POST_ID   (HttpStatus.BAD_REQUEST, "POST-002", "이미 존재하는 게시글 ID 입니다."),
+    POST_ACCESS_DENIED  (HttpStatus.FORBIDDEN, "POST-003", "해당 게시글의 대한 권한이 없습니다."),
 
     // Comment Exception
     COMMENT_NOT_FOUND   (HttpStatus.NOT_FOUND, "COMMENT-001", "해당 댓글을 찾을 수 없습니다."),

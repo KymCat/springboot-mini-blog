@@ -12,6 +12,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -38,8 +39,11 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/posts")
-    public ResponseEntity<PostResponse> createPost(@RequestBody PostCreate dto) {
-        PostResponse created = postService.createPost(dto);
+    public ResponseEntity<PostResponse> createPost(Authentication auth,
+                                                   @RequestBody PostCreate dto) {
+
+        String userId = auth.getName();
+        PostResponse created = postService.createPost(userId, dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -48,16 +52,21 @@ public class PostController {
 
     // 게시글 수정
     @PatchMapping("/posts/{id}")
-    public ResponseEntity<PostResponse> updatePost(@PathVariable Long id, @RequestBody PostUpdate dto) {
-        PostResponse updated = postService.updatePost(id,dto);
+    public ResponseEntity<PostResponse> updatePost(Authentication auth,
+                                                   @PathVariable Long id,
+                                                   @RequestBody PostUpdate dto) {
+        String userId = auth.getName();
+        PostResponse updated = postService.updatePost(userId, id, dto);
 
         return ResponseEntity.ok(updated);
     }
 
     // 게시글 삭제
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<PostResponse> deletePost(@PathVariable Long id) {
-        postService.deletePost(id);
+    public ResponseEntity<PostResponse> deletePost(Authentication auth,
+                                                   @PathVariable Long id) {
+        String userId = auth.getName();
+        postService.deletePost(userId, id);
 
         return ResponseEntity.noContent().build();
     }
