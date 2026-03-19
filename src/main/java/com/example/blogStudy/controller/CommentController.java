@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -29,8 +30,12 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentResponse> createComment(@PathVariable Long postId, @RequestBody CommentCreate dto) {
-        CommentResponse created = commentService.createComment(postId, dto);
+    public ResponseEntity<CommentResponse> createComment(Authentication auth,
+                                                         @PathVariable Long postId,
+                                                         @RequestBody CommentCreate dto) {
+
+        String userId = auth.getName();
+        CommentResponse created = commentService.createComment(userId, postId, dto);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -40,8 +45,11 @@ public class CommentController {
 
     // 댓글 수정
     @PatchMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> updateComment(@PathVariable Long id, @RequestBody CommentUpdate dto) {
-        CommentResponse updated = commentService.updateComment(id, dto);
+    public ResponseEntity<CommentResponse> updateComment(Authentication auth,
+                                                         @PathVariable Long id,
+                                                         @RequestBody CommentUpdate dto) {
+        String userId = auth.getName();
+        CommentResponse updated = commentService.updateComment(userId, id, dto);
 
         return ResponseEntity.ok(updated);
     }
@@ -49,8 +57,10 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> deleteComment(@PathVariable Long id) {
-        commentService.deleteComment(id);
+    public ResponseEntity<CommentResponse> deleteComment(Authentication auth, @PathVariable Long id) {
+
+        String userId = auth.getName();
+        commentService.deleteComment(userId, id);
 
         return ResponseEntity.noContent().build();
     }

@@ -10,6 +10,7 @@ import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.CommentRepository;
 import com.example.blogStudy.repository.PostRepository;
+import com.example.blogStudy.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,7 @@ import org.springframework.stereotype.Service;
 public class CommentService {
 
     private final CommentRepository commentRepository;
+    private final UserRepository userRepository;
     private final PostRepository postRepository;
 
     // 세션 (임시)
@@ -50,11 +52,14 @@ public class CommentService {
 
     // 댓글 작성
     @Transactional
-    public CommentResponse createComment(Long postId, CommentCreate dto) {
+    public CommentResponse createComment(String userId, Long postId, CommentCreate dto) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new CustomException(ErrorCode.POST_NOT_FOUND));
 
-        Comment comment = dto.toEntity(session, post);
+        Comment comment = dto.toEntity(user, post);
         commentRepository.save(comment);
         return CommentResponse.from(comment);
     }
@@ -62,11 +67,11 @@ public class CommentService {
 
     // 댓글 수정
     @Transactional
-    public CommentResponse updateComment(Long id, CommentUpdate dto) {
+    public CommentResponse updateComment(String userId, Long id, CommentUpdate dto) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
-        comment.validateOwner(session.getId()); // 권한 확인
+        comment.validateOwner(userId); // 권한 확인
         comment.update(dto);
         return CommentResponse.from(comment);
     }
@@ -74,11 +79,11 @@ public class CommentService {
 
     // 댓글 삭제
     @Transactional
-    public void deleteComment(Long id) {
+    public void deleteComment(String userId, Long id) {
         Comment comment = commentRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.COMMENT_NOT_FOUND));
 
-        comment.validateOwner(session.getId());
+        comment.validateOwner(userId);
         commentRepository.delete(comment);
     }
 }
