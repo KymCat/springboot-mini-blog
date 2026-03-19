@@ -1,4 +1,4 @@
-package com.example.blogStudy.service;
+package com.example.blogStudy.auth;
 
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.entity.User;
@@ -8,6 +8,7 @@ import com.example.blogStudy.jwt.JwtProperties;
 import com.example.blogStudy.jwt.JwtProvider;
 import com.example.blogStudy.jwt.JwtTokenResponse;
 import com.example.blogStudy.repository.UserRepository;
+import com.example.blogStudy.jwt.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -1,10 +1,8 @@
-package com.example.blogStudy.controller;
+package com.example.blogStudy.auth;
 
 import com.example.blogStudy.dto.request.ReissueRequest;
 import com.example.blogStudy.dto.request.UserRequest;
 import com.example.blogStudy.jwt.JwtTokenResponse;
-import com.example.blogStudy.service.AuthService;
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

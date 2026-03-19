@@ -1,4 +1,4 @@
-package com.example.blogStudy.service;
+package com.example.blogStudy.jwt;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
