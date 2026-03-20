@@ -80,6 +80,11 @@ public class JwtProvider {
         return getClaims(token).get("nickname", String.class);
     }
 
+    // refresh token 만료 시간 반환
+    public Long getRefreshTokenExpiration() {
+        return jwtProperties.getRefreshTokenExpiration() / 1000;
+    }
+
     // 토큰 검증
     public Boolean validateToken(String token) {
         try {

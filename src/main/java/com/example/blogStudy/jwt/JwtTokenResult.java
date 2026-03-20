@@ -5,7 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public class JwtTokenResponse {
+public class JwtTokenResult {
+
+    // AuthController Login Service Result
     private final String accessToken;
     private final String refreshToken;
+    private final Long refreshTokenExpiration;
 }
