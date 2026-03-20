@@ -28,7 +28,7 @@ public class RefreshTokenService {
     }
 
     // 해당 유저의 refresh 토큰(value) 조회
-    public String findByUserId(String userId) {
+    public String getRefreshToken(String userId) {
         return stringRedisTemplate.opsForValue().get(createKey(userId));
     }
 
@@ -45,7 +45,7 @@ public class RefreshTokenService {
 
     // refresh 토큰 유효 검증
     public Boolean isValid(String userId, String refreshToken) {
-        String savedToken = findByUserId(userId);
+        String savedToken = getRefreshToken(userId);
         return savedToken != null && refreshToken.equals(savedToken);
     }
 
