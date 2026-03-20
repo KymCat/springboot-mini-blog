@@ -80,13 +80,21 @@ public class JwtProvider {
         return getClaims(token).get("nickname", String.class);
     }
 
+    // access token 남은 시간 반환
+    public Long getRemainingTime(String accessToken) {
+        long remaining = getClaims(accessToken).getExpiration().getTime()
+                - System.currentTimeMillis();
+
+        return Math.max(remaining, 0);  // 음수 처리
+    }
+
     // refresh token 만료 시간 반환
     public Long getRefreshTokenExpiration() {
         return jwtProperties.getRefreshTokenExpiration() / 1000;
     }
 
     // 토큰 검증
-    public Boolean validateToken(String token) {
+    public boolean validateToken(String token) {
         try {
             getClaims(token);
             return true;

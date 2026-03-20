@@ -1,5 +1,6 @@
-package com.example.blogStudy.jwt;
+package com.example.blogStudy.jwt.redis;
 
+import com.example.blogStudy.jwt.JwtProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;

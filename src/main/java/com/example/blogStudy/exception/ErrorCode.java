@@ -24,6 +24,11 @@ public enum ErrorCode {
     // Jwt Exception
     INVALID_TOKEN   (HttpStatus.UNAUTHORIZED, "JWT-001", "유효하지 않은 토큰 입니다."),
 
+
+    // Auth Exception
+    INVALID_AUTH_HEADER (HttpStatus.UNAUTHORIZED, "AUTH-001", "유효하지 않은 헤더 입니다."),
+    INVALID_TOKEN_OWNER (HttpStatus.FORBIDDEN, "AUTH-002", "해당 토큰의 소유자가 아닙니다."),
+
     // System Exception
     INTERNAL_SERVER_ERROR
             (HttpStatus.INTERNAL_SERVER_ERROR,

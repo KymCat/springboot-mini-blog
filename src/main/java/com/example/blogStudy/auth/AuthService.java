@@ -7,9 +7,12 @@ import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.jwt.JwtProperties;
 import com.example.blogStudy.jwt.JwtProvider;
 import com.example.blogStudy.jwt.JwtTokenResult;
+import com.example.blogStudy.jwt.redis.BlacklistTokenService;
 import com.example.blogStudy.repository.UserRepository;
-import com.example.blogStudy.jwt.RefreshTokenService;
+import com.example.blogStudy.jwt.redis.RefreshTokenService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -18,9 +21,11 @@ public class AuthService {
     private final JwtProvider jwtProvider;
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
+    private final BlacklistTokenService blacklistTokenService;
     private final UserRepository userRepository;
 
     // 로그인
+    @Transactional
     public JwtTokenResult login(LoginRequest dto) {
         // 1. ID 확인
         User user = userRepository.findById(dto.getId())
@@ -48,7 +53,20 @@ public class AuthService {
     }
 
 
+    // 로그아웃
+    @Transactional
+    public void logout(Authentication auth, String accessToken) {
+
+        String userId = auth.getName();
+
+        refreshTokenService.delete(userId);
+        blacklistTokenService.saveBlackList(accessToken);
+    }
+
+
+
     // refresh token 재발행
+    @Transactional
     public JwtTokenResult reissue(String token) {
         // 1. refresh token 검증
         if(Boolean.FALSE.equals(jwtProvider.validateToken(token)))
@@ -78,4 +96,5 @@ public class AuthService {
                 refreshToken,
                 jwtProperties.getRefreshTokenExpiration());
     }
+
 }
