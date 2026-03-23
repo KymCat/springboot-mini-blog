@@ -12,9 +12,11 @@ import com.example.blogStudy.repository.UserRepository;
 import com.example.blogStudy.jwt.redis.RefreshTokenService;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class AuthService {
@@ -45,7 +47,7 @@ public class AuthService {
                 refreshToken,
                 jwtProperties.getRefreshTokenExpiration()
         );
-
+        log.info("refreshToken save : {} ", refreshToken);
         return new JwtTokenResult(
                 accessToken,
                 refreshToken,
@@ -68,9 +70,9 @@ public class AuthService {
     // refresh token 재발행
     @Transactional
     public JwtTokenResult reissue(String token) {
+
         // 1. refresh token 검증
-        if(Boolean.FALSE.equals(jwtProvider.validateToken(token)))
-            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        jwtProvider.validateToken(token);
 
         // 2. dto 데이터에서 user id 추출
         String userId = jwtProvider.getUserId(token);

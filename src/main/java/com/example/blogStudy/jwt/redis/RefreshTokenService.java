@@ -47,7 +47,7 @@ public class RefreshTokenService {
     // refresh 토큰 유효 검증
     public Boolean isValid(String userId, String refreshToken) {
         String savedToken = getRefreshToken(userId);
-        return savedToken != null && refreshToken.equals(savedToken);
+        return refreshToken.equals(savedToken);
     }
 
 }

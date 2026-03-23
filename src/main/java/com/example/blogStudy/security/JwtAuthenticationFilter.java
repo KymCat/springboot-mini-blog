@@ -54,8 +54,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 throw new CustomException(ErrorCode.BLACKLISTED_TOKEN);
 
             // 유효한 액세스 토큰인지 확인
-            if (!jwtProvider.validateToken(accessToken))
-                throw new CustomException(ErrorCode.INVALID_TOKEN);
+            jwtProvider.validateToken(accessToken);
 
             String userId = jwtProvider.getUserId(accessToken);
             String nickname = jwtProvider.getNickname(accessToken);

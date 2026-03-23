@@ -1,6 +1,5 @@
 package com.example.blogStudy.auth;
 
-import com.example.blogStudy.dto.request.ReissueRequest;
 import com.example.blogStudy.dto.request.LoginRequest;
 import com.example.blogStudy.jwt.JwtTokenResult;
 import jakarta.servlet.http.HttpServletRequest;
@@ -10,9 +9,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.time.Duration;
 
 @Slf4j
 @RestController
@@ -56,8 +58,9 @@ public class AuthController {
 
     // 토큰 재발행
     @PostMapping("/auth/reissue")
-    public ResponseEntity<String> reissue(@RequestBody ReissueRequest dto) {
-        JwtTokenResult result = authService.reissue(dto.getRefreshToken());
+    public ResponseEntity<String> reissue(
+            @CookieValue(name = "refreshToken") String refreshToken) {
+        JwtTokenResult result = authService.reissue(refreshToken);
 
         // Refresh Token set Cookie
         ResponseCookie cookie = refreshTokenCookie(result);
@@ -75,7 +78,7 @@ public class AuthController {
                 .httpOnly(true)
                 .secure(isProduction)
                 .path("/")
-                .maxAge(result.getRefreshTokenExpiration())
+                .maxAge(Duration.ofMillis(result.getRefreshTokenExpiration()))
                 .sameSite("Lax")
                 .build();
     }
