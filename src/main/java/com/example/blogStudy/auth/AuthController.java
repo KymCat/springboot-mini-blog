@@ -37,12 +37,14 @@ public class AuthController {
 
     // 로그아웃
     @PostMapping("/auth/logout")
-    public ResponseEntity<Void> logout(Authentication auth, HttpServletRequest request) {
+    public ResponseEntity<Void> logout(
+            @CookieValue(name = "refreshToken") String refreshToken,
+            HttpServletRequest request) {
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String accessToken = authHeader.substring(7);
 
-        authService.logout(auth, accessToken);
+        authService.logout(accessToken, refreshToken);
         ResponseCookie cookie = ResponseCookie.from("refreshToken", "")
                 .httpOnly(true)
                 .secure(true)

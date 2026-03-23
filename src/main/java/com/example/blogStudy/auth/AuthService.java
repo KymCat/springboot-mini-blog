@@ -10,6 +10,7 @@ import com.example.blogStudy.jwt.JwtTokenResult;
 import com.example.blogStudy.jwt.redis.BlacklistTokenService;
 import com.example.blogStudy.repository.UserRepository;
 import com.example.blogStudy.jwt.redis.RefreshTokenService;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +48,7 @@ public class AuthService {
                 refreshToken,
                 jwtProperties.getRefreshTokenExpiration()
         );
-        log.info("refreshToken save : {} ", refreshToken);
+
         return new JwtTokenResult(
                 accessToken,
                 refreshToken,
@@ -57,12 +58,14 @@ public class AuthService {
 
     // 로그아웃
     @Transactional
-    public void logout(Authentication auth, String accessToken) {
+    public void logout(String accessToken, String refreshToken) {
+        try {
+            String userId = jwtProvider.getUserId(refreshToken);
 
-        String userId = auth.getName();
-
-        refreshTokenService.delete(userId);
-        blacklistTokenService.saveBlackList(accessToken);
+            refreshTokenService.delete(userId);
+            blacklistTokenService.saveBlackList(accessToken);
+        }
+        catch (ExpiredJwtException e) { return; }
     }
 
 
