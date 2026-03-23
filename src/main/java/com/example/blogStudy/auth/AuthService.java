@@ -74,7 +74,7 @@ public class AuthService {
 
         // 2. dto 데이터에서 user id 추출
         String userId = jwtProvider.getUserId(token);
-        String nickname = jwtProvider.getNickName(token);
+        String nickname = jwtProvider.getNickname(token);
 
         // 3. redis refresh token 과 비교
         if(Boolean.FALSE.equals(refreshTokenService.isValid(userId, token)))

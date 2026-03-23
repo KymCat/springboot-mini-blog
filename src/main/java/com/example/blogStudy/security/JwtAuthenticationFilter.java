@@ -4,7 +4,6 @@ import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.jwt.JwtProvider;
 import com.example.blogStudy.jwt.redis.BlacklistTokenService;
-import jakarta.annotation.Resource;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +26,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private final JwtProvider jwtProvider;
     private final BlacklistTokenService blacklistTokenService;
 
-    @Resource(name = "handlerExceptionResolver")
+    @Qualifier("handlerExceptionResolver")
     private final HandlerExceptionResolver handlerExceptionResolver;
 
     @Override
@@ -52,16 +51,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
             // 블랙 리스트 확인
             if (blacklistTokenService.isBlackList(accessToken))
-                throw new CustomException(ErrorCode.INVALID_TOKEN);
+                throw new CustomException(ErrorCode.BLACKLISTED_TOKEN);
 
             // 유효한 액세스 토큰인지 확인
             if (!jwtProvider.validateToken(accessToken))
                 throw new CustomException(ErrorCode.INVALID_TOKEN);
 
             String userId = jwtProvider.getUserId(accessToken);
-            String nickName = jwtProvider.getNickName(accessToken);
+            String nickname = jwtProvider.getNickname(accessToken);
 
-            CustomUserDetails customUserDetails = new CustomUserDetails(userId, nickName);
+            CustomUserDetails customUserDetails = new CustomUserDetails(userId, nickname);
 
             // Authentication 객체 생성
             UsernamePasswordAuthenticationToken authentication =
@@ -72,13 +71,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     );
 
             // SecurityContextHolder 에 저장
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (SecurityContextHolder.getContext().getAuthentication() == null) {
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
 
             // 다음 필터로 넘김
             filterChain.doFilter(request, response);
-        } catch (Exception customException) {
-            SecurityContextHolder.clearContext();
-            handlerExceptionResolver.resolveException(request, response, null, customException);
+
+        } catch (CustomException e) {
+            SecurityContextHolder.clearContext();   // JWT 검증 중 예외 발생시, 인증 정보 지우기
+            handlerExceptionResolver.resolveException(request, response, null, e);
         }
     }
 }

@@ -1,6 +1,10 @@
 package com.example.blogStudy.jwt;
 
+import com.example.blogStudy.exception.CustomException;
+import com.example.blogStudy.exception.ErrorCode;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
@@ -76,7 +80,7 @@ public class JwtProvider {
     }
 
     // token 안에서 nickname 반환
-    public String getNickName(String token) {
+    public String getNickname(String token) {
         return getClaims(token).get("nickname", String.class);
     }
 
@@ -98,9 +102,12 @@ public class JwtProvider {
         try {
             getClaims(token);
             return true;
-        }
-        catch (Exception e) {
-            return false;
+
+        } catch (ExpiredJwtException e) {
+            throw new CustomException(ErrorCode.EXPIRED_TOKEN);
+
+        } catch (JwtException | IllegalArgumentException e) {
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
         }
     }
 }

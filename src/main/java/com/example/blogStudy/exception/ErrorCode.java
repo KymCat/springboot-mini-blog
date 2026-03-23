@@ -22,8 +22,9 @@ public enum ErrorCode {
     COMMENT_FORBIDDEN   (HttpStatus.FORBIDDEN, "COMMENT-002", "해당 댓글에 대한 권한이 없습니다."),
 
     // Jwt Exception
-    INVALID_TOKEN   (HttpStatus.UNAUTHORIZED, "JWT-001", "유효하지 않은 토큰 입니다."),
-
+    INVALID_TOKEN       (HttpStatus.UNAUTHORIZED, "JWT-001", "유효하지 않은 토큰 입니다."),
+    BLACKLISTED_TOKEN   (HttpStatus.UNAUTHORIZED, "JWT-002", "블랙 리스트에 지정된 토큰입니다."),
+    EXPIRED_TOKEN       (HttpStatus.UNAUTHORIZED, "JWT-003", "이미 만료된 토큰 입니다."),
 
     // Auth Exception
     INVALID_AUTH_HEADER (HttpStatus.UNAUTHORIZED, "AUTH-001", "유효하지 않은 헤더 입니다."),
