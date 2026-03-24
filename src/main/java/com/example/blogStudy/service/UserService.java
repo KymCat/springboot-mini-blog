@@ -8,6 +8,7 @@ import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,6 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     // 유저 전체 조회
     @Transactional(readOnly = true)
@@ -41,7 +43,8 @@ public class UserService {
         if(userRepository.existsById(dto.getId()))
             throw new CustomException(ErrorCode.DUPLICATE_USER_ID);
 
-        User saved = userRepository.save(dto.toEntity());
+        String bcryptPassword = passwordEncoder.encode(dto.getPassword());
+        User saved = userRepository.save(dto.toEntity(bcryptPassword));
         return UserResponse.from(saved);
     }
 

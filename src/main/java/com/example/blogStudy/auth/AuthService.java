@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -25,6 +26,7 @@ public class AuthService {
     private final JwtProperties jwtProperties;
     private final RefreshTokenService refreshTokenService;
     private final BlacklistTokenService blacklistTokenService;
+    private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
 
     // 로그인
@@ -35,7 +37,7 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 2. 비밀번호 확인
-        if(!user.getPassword().equals(dto.getPassword()))
+        if(passwordEncoder.matches(user.getPassword(), dto.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
         // 3. 토큰 생성 (Jwt Access, Refresh)
@@ -67,7 +69,6 @@ public class AuthService {
         }
         catch (ExpiredJwtException e) { return; }
     }
-
 
 
     // refresh token 재발행

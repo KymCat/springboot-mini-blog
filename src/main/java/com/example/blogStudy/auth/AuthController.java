@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,7 +38,8 @@ public class AuthController {
     @PostMapping("/auth/logout")
     public ResponseEntity<Void> logout(
             @CookieValue(name = "refreshToken") String refreshToken,
-            HttpServletRequest request) {
+            HttpServletRequest request)
+    {
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         String accessToken = authHeader.substring(7);
@@ -61,7 +61,9 @@ public class AuthController {
     // 토큰 재발행
     @PostMapping("/auth/reissue")
     public ResponseEntity<String> reissue(
-            @CookieValue(name = "refreshToken") String refreshToken) {
+            @CookieValue(name = "refreshToken") String refreshToken)
+    {
+
         JwtTokenResult result = authService.reissue(refreshToken);
 
         // Refresh Token set Cookie
@@ -74,6 +76,7 @@ public class AuthController {
 
     // Refresh Token Cookie 설정
     private ResponseCookie refreshTokenCookie(JwtTokenResult result) {
+
         boolean isProduction = false;   // 로컬 개발, 운영 환경에서는 true 로 변경
 
         return ResponseCookie.from("refreshToken", result.getRefreshToken())

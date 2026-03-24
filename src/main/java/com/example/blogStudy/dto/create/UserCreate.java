@@ -11,7 +11,7 @@ public class UserCreate {
     private String password;
     private String name;
 
-    public User toEntity() {
-        return User.create(this.id, this.password, this.name);
+    public User toEntity(String password) {
+        return User.create(this.id, password, this.name);
     }
 }
