@@ -2,7 +2,8 @@ package com.example.blogStudy.service;
 
 import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
-import com.example.blogStudy.dto.update.UserUpdate;
+import com.example.blogStudy.dto.update.NameUpdate;
+import com.example.blogStudy.dto.update.PasswordUpdate;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.SimpleTimeZone;
 
 @Service
 @RequiredArgsConstructor
@@ -48,14 +50,61 @@ public class UserService {
         return UserResponse.from(saved);
     }
 
-    // 유저 계정 수정
+    // 현재 유저 비밀번호 수정
     @Transactional
-    public UserResponse updateUser(String id, UserUpdate dto) {
+    public void updatePassword(String id, PasswordUpdate dto) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
-        user.update(dto);
-        return UserResponse.from(user);
+        String currentPassword = dto.getCurrentPassword();
+        String newPassword = dto.getNewPassword();
+
+        // 기존 패스워드 입력 null, isBlanck() 체크
+        if (currentPassword == null || currentPassword.isBlank())
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
+        // 새 패스워드 입력 null, isBlanck() 체크
+        if (newPassword == null || newPassword.isBlank())
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
+        // 기존 패스워드, 새 패스워드 비교
+        if (currentPassword.equals(newPassword))
+            throw new CustomException(ErrorCode.SAME_AS_CURRENT_VALUE);
+
+        // 기존 패스워드 일치 여부
+        if (!passwordEncoder.matches(currentPassword, user.getPassword()))
+            throw new CustomException(ErrorCode.INVALID_PASSWORD);
+
+
+        user.updatePassword(passwordEncoder.encode(newPassword));
+    }
+
+    // 현재 유저 닉네임 수정
+    @Transactional
+    public void updateName(String id, NameUpdate dto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
+
+        String newName = dto.getName();
+
+        // 닉네임 입력 null 체크
+        if (newName == null)
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
+        // 닉네임 공백 제거
+        newName = newName.trim();
+        if (newName.isEmpty())
+            throw new CustomException(ErrorCode.EMPTY_INPUT_VALUE);
+
+        // 닉네임 중간 공백문자 포함 검사
+        if (newName.chars().anyMatch(Character::isWhitespace))
+            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+
+        // 기존 닉네임, 새 닉네임 비교
+        if (newName.equals(user.getName()))
+            throw new CustomException(ErrorCode.SAME_AS_CURRENT_VALUE);
+
+        user.updateName(newName);
     }
 
     // 유저 계정 삭제
@@ -66,4 +115,5 @@ public class UserService {
 
         userRepository.delete(user);
     }
+
 }

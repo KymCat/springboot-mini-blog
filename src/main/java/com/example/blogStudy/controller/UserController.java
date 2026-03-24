@@ -2,11 +2,13 @@ package com.example.blogStudy.controller;
 
 import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
-import com.example.blogStudy.dto.update.UserUpdate;
+import com.example.blogStudy.dto.update.NameUpdate;
+import com.example.blogStudy.dto.update.PasswordUpdate;
 import com.example.blogStudy.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -38,17 +40,29 @@ public class UserController {
                 .body(created);
     }
 
-    // 유저 정보 수정 (비밀번호, 닉네임)
-    @PatchMapping("/users/{id}")
-    public ResponseEntity<UserResponse> updateUser(@PathVariable String id, @RequestBody UserUpdate dto) {
-        UserResponse updated = userService.updateUser(id, dto);
+    // 현재 유저 비밀번호 수정
+    @PatchMapping("/users/me/password")
+    public ResponseEntity<Void> updatePassword(@RequestBody PasswordUpdate dto, Authentication auth) {
+        String id = auth.getName();
+        userService.updatePassword(id, dto);
 
-        return ResponseEntity.ok(updated);
+        return ResponseEntity.noContent().build();
     }
 
-    // 유저 계정 삭제
-    @DeleteMapping("/users/{id}")
-    public ResponseEntity<UserResponse> deleteUser(@PathVariable String id) {
+    // 현재 유저 닉네임 수정
+    @PatchMapping("/users/me/name")
+    public ResponseEntity<Void> updateName(@RequestBody NameUpdate dto, Authentication auth) {
+        String id = auth.getName();
+        userService.updateName(id, dto);
+
+        return ResponseEntity.noContent().build();
+    }
+
+    // 유저 계정 탈퇴
+    @DeleteMapping("/users/me")
+    public ResponseEntity<UserResponse> deleteUser(Authentication auth) {
+
+        String id = auth.getName();
         userService.deleteUser(id);
 
         return ResponseEntity.noContent().build();

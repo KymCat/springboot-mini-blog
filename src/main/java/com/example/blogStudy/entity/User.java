@@ -1,6 +1,5 @@
 package com.example.blogStudy.entity;
 
-import com.example.blogStudy.dto.update.UserUpdate;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -27,8 +26,13 @@ public class User {
         return user;
     }
 
-    public void update(UserUpdate dto) {
-        this.name = dto.getName();
-        this.password = dto.getPassword();
+    public void updatePassword(String password) {
+        if (password != null)
+            this.password = password;
+    }
+
+    public void updateName(String name) {
+        if (name != null)
+            this.name = name;
     }
 }
