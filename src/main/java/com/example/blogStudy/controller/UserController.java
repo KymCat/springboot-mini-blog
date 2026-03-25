@@ -33,7 +33,7 @@ public class UserController {
 
     // 유저 계정 생성
     @PostMapping("/users")
-    public ResponseEntity<UserResponse> createUser(@RequestBody UserCreate dto) {
+    public ResponseEntity<UserResponse> createUser(@Valid @RequestBody UserCreate dto) {
         UserResponse created = userService.createUser(dto);
 
         return ResponseEntity
