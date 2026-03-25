@@ -79,19 +79,6 @@ public class UserService {
 
         String newName = dto.getName();
 
-//        // 닉네임 입력 null 체크
-//        if (newName == null)
-//            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-//
-//        // 닉네임 공백 제거
-//        newName = newName.trim();
-//        if (newName.isEmpty())
-//            throw new CustomException(ErrorCode.EMPTY_INPUT_VALUE);
-
-        // 닉네임 중간 공백문자 포함 검사
-        if (newName.chars().anyMatch(Character::isWhitespace))
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-
         // 기존 닉네임, 새 닉네임 비교
         if (newName.equals(user.getName()))
             throw new CustomException(ErrorCode.SAME_AS_CURRENT_VALUE);

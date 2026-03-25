@@ -53,7 +53,7 @@ public class UserController {
 
     // 현재 유저 닉네임 수정
     @PatchMapping("/users/me/name")
-    public ResponseEntity<Void> updateName(@RequestBody NameUpdate dto, Authentication auth)
+    public ResponseEntity<Void> updateName(@Valid @RequestBody NameUpdate dto, Authentication auth)
     {
 
         String id = auth.getName();
