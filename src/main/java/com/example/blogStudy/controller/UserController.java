@@ -5,6 +5,7 @@ import com.example.blogStudy.dto.response.UserResponse;
 import com.example.blogStudy.dto.update.NameUpdate;
 import com.example.blogStudy.dto.update.PasswordUpdate;
 import com.example.blogStudy.service.UserService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -42,7 +43,8 @@ public class UserController {
 
     // 현재 유저 비밀번호 수정
     @PatchMapping("/users/me/password")
-    public ResponseEntity<Void> updatePassword(@RequestBody PasswordUpdate dto, Authentication auth) {
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordUpdate dto, Authentication auth)
+    {
         String id = auth.getName();
         userService.updatePassword(id, dto);
 
@@ -51,7 +53,9 @@ public class UserController {
 
     // 현재 유저 닉네임 수정
     @PatchMapping("/users/me/name")
-    public ResponseEntity<Void> updateName(@RequestBody NameUpdate dto, Authentication auth) {
+    public ResponseEntity<Void> updateName(@RequestBody NameUpdate dto, Authentication auth)
+    {
+
         String id = auth.getName();
         userService.updateName(id, dto);
 

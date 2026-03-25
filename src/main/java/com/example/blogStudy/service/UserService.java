@@ -9,6 +9,7 @@ import com.example.blogStudy.exception.CustomException;
 import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -59,14 +60,6 @@ public class UserService {
         String currentPassword = dto.getCurrentPassword();
         String newPassword = dto.getNewPassword();
 
-        // 기존 패스워드 입력 null, isBlanck() 체크
-        if (currentPassword == null || currentPassword.isBlank())
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-
-        // 새 패스워드 입력 null, isBlanck() 체크
-        if (newPassword == null || newPassword.isBlank())
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-
         // 기존 패스워드, 새 패스워드 비교
         if (currentPassword.equals(newPassword))
             throw new CustomException(ErrorCode.SAME_AS_CURRENT_VALUE);
@@ -74,7 +67,6 @@ public class UserService {
         // 기존 패스워드 일치 여부
         if (!passwordEncoder.matches(currentPassword, user.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
-
 
         user.updatePassword(passwordEncoder.encode(newPassword));
     }
@@ -87,14 +79,14 @@ public class UserService {
 
         String newName = dto.getName();
 
-        // 닉네임 입력 null 체크
-        if (newName == null)
-            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
-
-        // 닉네임 공백 제거
-        newName = newName.trim();
-        if (newName.isEmpty())
-            throw new CustomException(ErrorCode.EMPTY_INPUT_VALUE);
+//        // 닉네임 입력 null 체크
+//        if (newName == null)
+//            throw new CustomException(ErrorCode.INVALID_INPUT_VALUE);
+//
+//        // 닉네임 공백 제거
+//        newName = newName.trim();
+//        if (newName.isEmpty())
+//            throw new CustomException(ErrorCode.EMPTY_INPUT_VALUE);
 
         // 닉네임 중간 공백문자 포함 검사
         if (newName.chars().anyMatch(Character::isWhitespace))

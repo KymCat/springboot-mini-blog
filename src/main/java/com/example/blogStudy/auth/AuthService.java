@@ -37,7 +37,7 @@ public class AuthService {
                 .orElseThrow(() -> new CustomException(ErrorCode.USER_NOT_FOUND));
 
         // 2. 비밀번호 확인
-        if(passwordEncoder.matches(user.getPassword(), dto.getPassword()))
+        if(!passwordEncoder.matches(dto.getPassword(), user.getPassword()))
             throw new CustomException(ErrorCode.INVALID_PASSWORD);
 
         // 3. 토큰 생성 (Jwt Access, Refresh)
