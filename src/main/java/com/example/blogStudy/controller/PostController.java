@@ -5,6 +5,7 @@ import com.example.blogStudy.dto.response.PostDetailResponse;
 import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
 import com.example.blogStudy.service.PostService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -40,7 +41,7 @@ public class PostController {
     // 게시글 작성
     @PostMapping("/posts")
     public ResponseEntity<PostResponse> createPost(Authentication auth,
-                                                   @RequestBody PostCreate dto) {
+                                                   @Valid @RequestBody PostCreate dto) {
 
         String userId = auth.getName();
         PostResponse created = postService.createPost(userId, dto);
@@ -54,7 +55,7 @@ public class PostController {
     @PatchMapping("/posts/{id}")
     public ResponseEntity<PostResponse> updatePost(Authentication auth,
                                                    @PathVariable Long id,
-                                                   @RequestBody PostUpdate dto) {
+                                                   @Valid @RequestBody PostUpdate dto) {
         String userId = auth.getName();
         PostResponse updated = postService.updatePost(userId, id, dto);
 
