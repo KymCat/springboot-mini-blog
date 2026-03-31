@@ -4,6 +4,7 @@ import com.example.blogStudy.dto.create.CommentCreate;
 import com.example.blogStudy.dto.response.CommentResponse;
 import com.example.blogStudy.dto.update.CommentUpdate;
 import com.example.blogStudy.service.CommentService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
@@ -32,7 +33,7 @@ public class CommentController {
     @PostMapping("/posts/{postId}/comments")
     public ResponseEntity<CommentResponse> createComment(Authentication auth,
                                                          @PathVariable Long postId,
-                                                         @RequestBody CommentCreate dto) {
+                                                         @Valid @RequestBody CommentCreate dto) {
 
         String userId = auth.getName();
         CommentResponse created = commentService.createComment(userId, postId, dto);
@@ -47,7 +48,7 @@ public class CommentController {
     @PatchMapping("/comments/{id}")
     public ResponseEntity<CommentResponse> updateComment(Authentication auth,
                                                          @PathVariable Long id,
-                                                         @RequestBody CommentUpdate dto) {
+                                                         @Valid @RequestBody CommentUpdate dto) {
         String userId = auth.getName();
         CommentResponse updated = commentService.updateComment(userId, id, dto);
 
