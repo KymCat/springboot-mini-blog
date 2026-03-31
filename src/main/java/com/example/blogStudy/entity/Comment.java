@@ -10,8 +10,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDateTime;
-
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -22,7 +20,8 @@ public class Comment extends BaseTimeEntity {
     @Column(nullable = false)
     private Long id;
 
-    @Column(nullable = false)
+    @Lob
+    @Column(nullable = false, length = 6000)
     private String content;
 
 
