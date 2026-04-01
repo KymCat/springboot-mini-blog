@@ -3,6 +3,7 @@ package com.example.blogStudy.auth;
 import com.example.blogStudy.dto.request.LoginRequest;
 import com.example.blogStudy.jwt.JwtTokenResult;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +24,7 @@ public class AuthController {
 
     // 로그인
     @PostMapping("/auth/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest dto) {
+    public ResponseEntity<String> login(@RequestBody @Valid LoginRequest dto) {
         JwtTokenResult result = authService.login(dto);
 
         // Refresh Token set Cookie
