@@ -32,6 +32,7 @@ public enum ErrorCode {
     // Auth Exception
     INVALID_AUTH_HEADER (HttpStatus.UNAUTHORIZED, "AUTH-001", "유효하지 않은 헤더 입니다."),
     INVALID_TOKEN_OWNER (HttpStatus.FORBIDDEN, "AUTH-002", "해당 토큰의 소유자가 아닙니다."),
+    REFRESH_NOT_FOUND(HttpStatus.BAD_REQUEST, "AUTH-003", "Refresh 토큰이 존재하지 않습니다"),
 
     // System Exception
     INTERNAL_SERVER_ERROR

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.MissingRequestCookieException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -45,6 +46,23 @@ public class GlobalExceptionHandler {
                         400,
                         ErrorCode.INVALID_INPUT_VALUE.getCode(),
                         message,
+                        request.getRequestURI()));
+    }
+
+    @ExceptionHandler(MissingRequestCookieException.class)
+    public ResponseEntity<ErrorResponse> handleMissingRequestCookieException(
+            MissingRequestCookieException e,
+            HttpServletRequest request
+    )
+    {
+        log.warn("요청 헤더 Cookie 예외 path = {}", request.getRequestURI());
+
+        return ResponseEntity
+                .status(400)
+                .body(ErrorResponse.of(
+                        400,
+                        ErrorCode.REFRESH_NOT_FOUND.getCode(),
+                        ErrorCode.REFRESH_NOT_FOUND.getMessage(),
                         request.getRequestURI()));
     }
 
