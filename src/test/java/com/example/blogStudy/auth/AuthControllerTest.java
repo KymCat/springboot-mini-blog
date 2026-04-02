@@ -39,7 +39,7 @@ class AuthControllerTest {
 
 
     @Test
-    @DisplayName("로그인 성공 : access token 반환, refresh token cookie 설정")
+    @DisplayName("로그인 성공")
     void login_success() throws Exception {
         // given
         LoginRequest loginRequest = new LoginRequest("user1234", "password1234@");
@@ -52,16 +52,58 @@ class AuthControllerTest {
         given(authService.login(any(LoginRequest.class))).willReturn(jwtTokenResult);
 
         // when
-        ResultActions resultActions = mockMvc.perform(post("/auth/login")
+        ResultActions result = mockMvc.perform(post("/auth/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsBytes(loginRequest)));
 
         // then
-        resultActions
+        result
                 .andExpect(status().isOk())
                 .andExpect(content().string("access-token-value"))
                 .andExpect(header().string(HttpHeaders.SET_COOKIE,
                         org.hamcrest.Matchers.containsString("refreshToken=refresh-token-value")));
     }
+
+    @Test
+    @DisplayName("로그인 실패 : 아이디 검증 실패")
+    void login_fail_valid_id() throws Exception {
+        // given
+        LoginRequest loginRequest = new LoginRequest("", "password1234@");
+
+        // when
+        ResultActions result = mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(loginRequest)));
+
+        // then
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.code").value("USER-004"))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.path").value("/auth/login"));
+    }
+
+    @Test
+    @DisplayName("로그인 실패 : 비밀번호 검증 실패")
+    void login_fail_valid_password() throws Exception {
+        // given
+        LoginRequest loginRequest = new LoginRequest("user1234", "");
+
+        // when
+        ResultActions result = mockMvc.perform(post("/auth/login")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(loginRequest)));
+
+        // then
+        result
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.status").value(400))
+                .andExpect(jsonPath("$.code").value("USER-004"))
+                .andExpect(jsonPath("$.message").exists())
+                .andExpect(jsonPath("$.path").value("/auth/login"));
+    }
+
+
 
 }
