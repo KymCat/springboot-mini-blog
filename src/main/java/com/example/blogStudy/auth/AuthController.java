@@ -1,6 +1,8 @@
 package com.example.blogStudy.auth;
 
 import com.example.blogStudy.dto.request.LoginRequest;
+import com.example.blogStudy.exception.CustomException;
+import com.example.blogStudy.exception.ErrorCode;
 import com.example.blogStudy.jwt.JwtTokenResult;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -43,6 +45,9 @@ public class AuthController {
     {
 
         String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (authHeader == null || !authHeader.startsWith("Bearer "))
+            throw new CustomException(ErrorCode.INVALID_AUTH_HEADER);
+
         String accessToken = authHeader.substring(7);
 
         authService.logout(accessToken, refreshToken);
