@@ -49,6 +49,7 @@ public class GlobalExceptionHandler {
                         request.getRequestURI()));
     }
 
+    // 쿠키 예외
     @ExceptionHandler(MissingRequestCookieException.class)
     public ResponseEntity<ErrorResponse> handleMissingRequestCookieException(
             MissingRequestCookieException e,
