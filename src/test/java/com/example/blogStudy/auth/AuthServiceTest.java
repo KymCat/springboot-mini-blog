@@ -52,7 +52,6 @@ class AuthServiceTest {
         given(jwtProvider.createRefreshToken(id)).willReturn("refreshToken");
         given(jwtProperties.getRefreshTokenExpiration()).willReturn(600000L);
 
-
         // when
         JwtTokenResult result = authService.login(loginRequest);
 
@@ -66,9 +65,24 @@ class AuthServiceTest {
                 .save(id, "refreshToken", 600000L);
     }
 
-//    @Test
-//    void logout() {
-//    }
+    @Test
+    @DisplayName("로그아웃 성공")
+    void logout() {
+        // given
+        String userId = "user1234";
+        String accessToken = "accessToken";
+        String refreshToken = "refreshToken";
+
+        given(jwtProvider.getUserId(refreshToken)).willReturn(userId);
+
+        // when
+        authService.logout(accessToken,refreshToken);
+
+        // then
+        then(refreshTokenService).should().delete(userId);
+        then(blacklistTokenService).should().saveBlackList(accessToken);
+    }
+
 //
 //    @Test
 //    void reissue() {
