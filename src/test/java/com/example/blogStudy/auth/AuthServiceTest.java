@@ -83,8 +83,34 @@ class AuthServiceTest {
         then(blacklistTokenService).should().saveBlackList(accessToken);
     }
 
-//
-//    @Test
-//    void reissue() {
-//    }
+
+    @Test
+    @DisplayName("재발행 성공")
+    void reissue() {
+        // given
+        String userId = "user1234";
+        String nickname = "nickname";
+        String refreshToken = "refreshToken";
+        String newAccessToken = "newAccessToken";
+        String newRefreshToken = "newRefreshToken";
+        long refreshTokenExpiration = 600000L;
+
+        given(jwtProvider.getUserId(refreshToken)).willReturn(userId);
+        given(jwtProvider.getNickname(refreshToken)).willReturn(nickname);
+        given(refreshTokenService.isValid(userId, refreshToken)).willReturn(true);
+        given(jwtProvider.createAccessToken(userId, nickname)).willReturn(newAccessToken);
+        given(jwtProvider.createRefreshToken(userId)).willReturn(newRefreshToken);
+        given(jwtProperties.getRefreshTokenExpiration()).willReturn(refreshTokenExpiration);
+
+        // when
+        JwtTokenResult result = authService.reissue(refreshToken);
+
+        // then
+        assertEquals("newAccessToken", result.getAccessToken());
+        assertEquals("newRefreshToken", result.getRefreshToken());
+        assertEquals(600000L, result.getRefreshTokenExpiration());
+
+        then(refreshTokenService).should()
+                .save(userId, newRefreshToken, refreshTokenExpiration);
+    }
 }
