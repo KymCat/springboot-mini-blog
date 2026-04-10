@@ -1,23 +1,27 @@
 package com.example.blogStudy.controller;
 
+import com.example.blogStudy.config.TestWebConfig;
 import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
 import com.example.blogStudy.dto.update.PasswordUpdate;
 import com.example.blogStudy.security.JwtAuthenticationFilter;
 import com.example.blogStudy.service.UserService;
+import com.example.blogStudy.support.security.WithCustomMockUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.web.method.support.HandlerMethodArgumentResolver;
+import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -27,6 +31,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+
 @WebMvcTest(
         controllers = UserController.class,
         excludeFilters = @ComponentScan.Filter(
@@ -34,6 +39,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
                 classes = JwtAuthenticationFilter.class
         )
 )
+@Import(TestWebConfig.class)
 class UserControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -43,6 +49,7 @@ class UserControllerTest {
 
     @MockitoBean
     private UserService userService;
+
 
     @Test
     @DisplayName("유저 전체 조회")
@@ -113,24 +120,24 @@ class UserControllerTest {
     }
 
 
-//    @Test
-//    @DisplayName("유저 비밀번호 수정")
-//    @WithMockUser(username = "user1234")
-//    void updatePassword() throws Exception {
-//        String currentPassword = "testPassword1";
-//        String newPassword = "newPassword1";
-//        Authentication auth =  SecurityContextHolder.getContext().getAuthentication();
-//        PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
-//
-//        ResultActions result = mockMvc.perform(patch("/users/me/password")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(objectMapper.writeValueAsBytes(dto)));
-//
-//        result
-//                .andExpect(status().isNoContent());
-//
-//        verify(userService).updatePassword(eq("user1234"), dto);
-//    }
+    @Test
+    @WithCustomMockUser
+    @DisplayName("유저 비밀번호 수정")
+    void updatePassword() throws Exception {
+        String currentPassword = "testPassword1";
+        String newPassword = "newPassword1";
+        PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
+
+        ResultActions result = mockMvc.perform(patch("/users/me/password")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(dto)));
+
+        result
+                .andExpect(status().isNoContent());
+
+        verify(userService).updatePassword(eq("user1234"), any(PasswordUpdate.class));
+
+    }
 //
 //    @Test
 //    void updateName() {

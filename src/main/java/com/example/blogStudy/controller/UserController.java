@@ -10,7 +10,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,7 +47,7 @@ public class UserController {
     public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordUpdate dto,
                                                @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        String id = userDetails.getUserId();
+        String id = userDetails.getUsername();
         userService.updatePassword(id, dto);
 
         return ResponseEntity.noContent().build();
