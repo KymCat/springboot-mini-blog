@@ -4,6 +4,7 @@ import com.example.blogStudy.dto.create.PostCreate;
 import com.example.blogStudy.dto.response.PostDetailResponse;
 import com.example.blogStudy.dto.response.PostResponse;
 import com.example.blogStudy.dto.update.PostUpdate;
+import com.example.blogStudy.security.CustomUserDetails;
 import com.example.blogStudy.service.PostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +15,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -40,10 +42,10 @@ public class PostController {
 
     // 게시글 작성
     @PostMapping("/posts")
-    public ResponseEntity<PostResponse> createPost(Authentication auth,
+    public ResponseEntity<PostResponse> createPost(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                    @Valid @RequestBody PostCreate dto) {
 
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         PostResponse created = postService.createPost(userId, dto);
 
         return ResponseEntity
@@ -53,10 +55,10 @@ public class PostController {
 
     // 게시글 수정
     @PatchMapping("/posts/{id}")
-    public ResponseEntity<PostResponse> updatePost(Authentication auth,
+    public ResponseEntity<PostResponse> updatePost(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                    @PathVariable Long id,
                                                    @Valid @RequestBody PostUpdate dto) {
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         PostResponse updated = postService.updatePost(userId, id, dto);
 
         return ResponseEntity.ok(updated);
@@ -64,9 +66,9 @@ public class PostController {
 
     // 게시글 삭제
     @DeleteMapping("/posts/{id}")
-    public ResponseEntity<PostResponse> deletePost(Authentication auth,
+    public ResponseEntity<PostResponse> deletePost(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                    @PathVariable Long id) {
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         postService.deletePost(userId, id);
 
         return ResponseEntity.noContent().build();

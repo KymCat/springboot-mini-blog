@@ -4,12 +4,14 @@ import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
 import com.example.blogStudy.dto.update.NameUpdate;
 import com.example.blogStudy.dto.update.PasswordUpdate;
+import com.example.blogStudy.security.CustomUserDetails;
 import com.example.blogStudy.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -43,9 +45,10 @@ public class UserController {
 
     // 현재 유저 비밀번호 수정
     @PatchMapping("/users/me/password")
-    public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordUpdate dto, Authentication auth)
+    public ResponseEntity<Void> updatePassword(@Valid @RequestBody PasswordUpdate dto,
+                                               @AuthenticationPrincipal CustomUserDetails userDetails)
     {
-        String id = auth.getName();
+        String id = userDetails.getUserId();
         userService.updatePassword(id, dto);
 
         return ResponseEntity.noContent().build();
@@ -53,10 +56,11 @@ public class UserController {
 
     // 현재 유저 닉네임 수정
     @PatchMapping("/users/me/name")
-    public ResponseEntity<Void> updateName(@Valid @RequestBody NameUpdate dto, Authentication auth)
+    public ResponseEntity<Void> updateName(@Valid @RequestBody NameUpdate dto,
+                                           @AuthenticationPrincipal CustomUserDetails userDetails)
     {
 
-        String id = auth.getName();
+        String id = userDetails.getUserId();
         userService.updateName(id, dto);
 
         return ResponseEntity.noContent().build();
@@ -64,9 +68,9 @@ public class UserController {
 
     // 유저 계정 탈퇴
     @DeleteMapping("/users/me")
-    public ResponseEntity<UserResponse> deleteUser(Authentication auth) {
+    public ResponseEntity<UserResponse> deleteUser(@AuthenticationPrincipal CustomUserDetails userDetails) {
 
-        String id = auth.getName();
+        String id = userDetails.getUserId();
         userService.deleteUser(id);
 
         return ResponseEntity.noContent().build();

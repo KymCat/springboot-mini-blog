@@ -3,6 +3,7 @@ package com.example.blogStudy.controller;
 import com.example.blogStudy.dto.create.CommentCreate;
 import com.example.blogStudy.dto.response.CommentResponse;
 import com.example.blogStudy.dto.update.CommentUpdate;
+import com.example.blogStudy.security.CustomUserDetails;
 import com.example.blogStudy.service.CommentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -10,6 +11,7 @@ import org.springframework.data.web.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 
@@ -31,11 +33,11 @@ public class CommentController {
 
     // 댓글 작성
     @PostMapping("/posts/{postId}/comments")
-    public ResponseEntity<CommentResponse> createComment(Authentication auth,
+    public ResponseEntity<CommentResponse> createComment(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @PathVariable Long postId,
                                                          @Valid @RequestBody CommentCreate dto) {
 
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         CommentResponse created = commentService.createComment(userId, postId, dto);
 
         return ResponseEntity
@@ -46,10 +48,10 @@ public class CommentController {
 
     // 댓글 수정
     @PatchMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> updateComment(Authentication auth,
+    public ResponseEntity<CommentResponse> updateComment(@AuthenticationPrincipal CustomUserDetails userDetails,
                                                          @PathVariable Long id,
                                                          @Valid @RequestBody CommentUpdate dto) {
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         CommentResponse updated = commentService.updateComment(userId, id, dto);
 
         return ResponseEntity.ok(updated);
@@ -58,9 +60,10 @@ public class CommentController {
 
     // 댓글 삭제
     @DeleteMapping("/comments/{id}")
-    public ResponseEntity<CommentResponse> deleteComment(Authentication auth, @PathVariable Long id) {
+    public ResponseEntity<CommentResponse> deleteComment(@AuthenticationPrincipal CustomUserDetails userDetails,
+                                                         @PathVariable Long id) {
 
-        String userId = auth.getName();
+        String userId = userDetails.getUserId();
         commentService.deleteComment(userId, id);
 
         return ResponseEntity.noContent().build();
