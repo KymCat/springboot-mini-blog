@@ -10,7 +10,6 @@ import com.example.blogStudy.support.security.WithCustomMockUser;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
@@ -19,9 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.method.support.HandlerMethodArgumentResolver;
-import org.springframework.security.web.method.annotation.AuthenticationPrincipalArgumentResolver;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.List;
@@ -136,7 +132,6 @@ class UserControllerTest {
                 .andExpect(status().isNoContent());
 
         verify(userService).updatePassword(eq("user1234"), any(PasswordUpdate.class));
-
     }
 //
 //    @Test
