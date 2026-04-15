@@ -3,6 +3,7 @@ package com.example.blogStudy.controller;
 import com.example.blogStudy.config.TestWebConfig;
 import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
+import com.example.blogStudy.dto.update.NameUpdate;
 import com.example.blogStudy.dto.update.PasswordUpdate;
 import com.example.blogStudy.security.JwtAuthenticationFilter;
 import com.example.blogStudy.service.UserService;
@@ -120,6 +121,7 @@ class UserControllerTest {
     @WithCustomMockUser
     @DisplayName("유저 비밀번호 수정")
     void updatePassword() throws Exception {
+        String id = "user1234";
         String currentPassword = "testPassword1";
         String newPassword = "newPassword1";
         PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
@@ -131,14 +133,37 @@ class UserControllerTest {
         result
                 .andExpect(status().isNoContent());
 
-        verify(userService).updatePassword(eq("user1234"), any(PasswordUpdate.class));
+        verify(userService).updatePassword(eq(id), any(PasswordUpdate.class));
     }
-//
-//    @Test
-//    void updateName() {
-//    }
-//
-//    @Test
-//    void deleteUser() {
-//    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("유저 닉네임 수정")
+    void updateName() throws Exception {
+        String id = "user1234";
+        String newName = "newName";
+        NameUpdate dto = new NameUpdate(newName);
+
+        ResultActions result = mockMvc.perform(patch("/users/me/name")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsBytes(dto)));
+
+        result
+                .andExpect(status().isNoContent());
+
+        verify(userService).updateName(eq(id), any(NameUpdate.class));
+    }
+
+    @Test
+    @WithCustomMockUser
+    @DisplayName("유저 정보 삭제")
+    void deleteUser() throws Exception {
+        String id = "user1234";
+
+        ResultActions result = mockMvc.perform(delete("/users/me"));
+        result
+                .andExpect(status().isNoContent());
+
+        verify(userService).deleteUser(eq(id));
+    }
 }
