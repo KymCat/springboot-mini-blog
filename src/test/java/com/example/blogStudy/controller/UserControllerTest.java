@@ -114,6 +114,11 @@ class UserControllerTest {
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").value(id))
                 .andExpect(jsonPath("$.name").value(name));
+
+        verify(userService).createUser(argThat(user ->
+                user.getId().equals(id) &&
+                user.getPassword().equals(password) &&
+                user.getName().equals(name)));
     }
 
 
@@ -133,7 +138,9 @@ class UserControllerTest {
         result
                 .andExpect(status().isNoContent());
 
-        verify(userService).updatePassword(eq(id), any(PasswordUpdate.class));
+        verify(userService).updatePassword(eq(id), argThat(arg ->
+                arg.getCurrentPassword().equals(currentPassword) &&
+                arg.getNewPassword().equals(newPassword)));
     }
 
     @Test
@@ -151,7 +158,8 @@ class UserControllerTest {
         result
                 .andExpect(status().isNoContent());
 
-        verify(userService).updateName(eq(id), any(NameUpdate.class));
+        verify(userService).updateName(eq(id), argThat(arg ->
+                arg.getName().equals(newName)));
     }
 
     @Test
