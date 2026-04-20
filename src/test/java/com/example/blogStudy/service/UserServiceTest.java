@@ -1,5 +1,6 @@
 package com.example.blogStudy.service;
 
+import com.example.blogStudy.dto.create.UserCreate;
 import com.example.blogStudy.dto.response.UserResponse;
 import com.example.blogStudy.entity.User;
 import com.example.blogStudy.exception.CustomException;
@@ -10,7 +11,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
@@ -18,7 +18,9 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 
 
 @ExtendWith(MockitoExtension.class)
@@ -81,11 +83,35 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.getUserById(id))
                 .isInstanceOf(CustomException.class);
     }
-//
-//    @Test
-//    void createUser() {
-//    }
-//
+
+    @Test
+    @DisplayName("유저 계정 생성 성공")
+    void create_user_success() {
+        // given
+        String id = "test1user";
+        String password = "password1";
+        String encodedPassword = passwordEncoder.encode(password);
+        String name = "유저1";
+
+        UserCreate dto = new UserCreate(id, password, name);
+        UserResponse expected = UserResponse.from(User.create(id, password, name));
+        User saved = User.create(id, encodedPassword, name);
+
+        given(userRepository.existsById(id)).willReturn(false);
+        given(passwordEncoder.encode(password)).willReturn(encodedPassword);
+        given(userRepository.save(any(User.class))).willReturn(saved);
+
+        // when
+        UserResponse result = userService.createUser(dto);
+
+        // then
+        assertThat(result)
+                .usingRecursiveComparison()
+                .isEqualTo(expected);
+
+        then(userRepository).should().save(any(User.class));
+    }
+
 //    @Test
 //    void updatePassword() {
 //    }
