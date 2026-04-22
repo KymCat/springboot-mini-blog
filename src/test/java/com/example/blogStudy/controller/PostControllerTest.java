@@ -27,9 +27,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import tools.jackson.databind.ObjectMapper;
 
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.ArgumentMatchers.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -42,6 +40,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 )
 @Import(TestWebConfig.class)
 class PostControllerTest {
+
+    // 1. 필드 (Mock, 상수)
     @Autowired
     private MockMvc mockMvc;
 
@@ -52,52 +52,39 @@ class PostControllerTest {
     private PostService postService;
 
     private static final String USER_ID = "test1user";
-
     private static final Long ID = 1L;
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
     private static final int LIKE_CNT = 1;
 
-    // 디폴트 유저 객체
+    // 2. 테스트용 객체 생성 메서드
     private User defaultUser() {
         return User.create(USER_ID, "password1", "name1");
     }
-
-    // 디폴트 게시글 객체
     private Post defaultPost() {
         return Post.create(TITLE, CONTENT, defaultUser());
     }
 
-    // 게시글 객체 생성 메서드
     private Post createPost(String title, String content, User user) {
         return Post.create(title, content, user);
     }
-
-    // 디폴트 게시글 작성용 객체
     private PostCreate defaultPostCreate() {
         return new PostCreate(TITLE,CONTENT);
     }
-
-    // 디폴트 게시글 응답용 객체
     private PostResponse defaultPostResponse() {
         return PostResponse.from(defaultPost());
     }
-
-    // 게시글 응답용 객체 생성 메서드
     private PostResponse createPostResponse(Post post) {
         return PostResponse.from(post);
     }
-
-    // 디폴트 게시글 응답용 디테일 객체
     private PostDetailResponse defaultPostDetailResponse() {
         return PostDetailResponse.from(defaultPost(), LIKE_CNT);
     }
-
-    // 디폴트 게시글 수정용 객체
     private PostUpdate defaultPostUpdate() {
         return new PostUpdate(TITLE + " updated", CONTENT + " updated");
     }
 
+    // 3. 테스트 코드
     @Test
     @DisplayName("게시글 전체 조회 성공")
     void get_posts_success() throws Exception {
