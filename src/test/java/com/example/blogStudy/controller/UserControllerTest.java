@@ -201,7 +201,7 @@ class UserControllerTest {
     @DisplayName("유저 비밀번호 수정")
     void update_password_success() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
         String currentPassword = "testPassword1";
         String newPassword = "newPassword1";
         PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
@@ -248,7 +248,7 @@ class UserControllerTest {
     @DisplayName("유저 비밀번호 수정 실패 - 현재 비밀번호와 새 비밀번호가 동일")
     void update_password_fail_equal_current_new_password() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
         String currentPassword = "testPassword1";
         String newPassword = "testPassword1";
         PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
@@ -280,7 +280,7 @@ class UserControllerTest {
     @DisplayName("유저 비밀번호 수정 실패 - 현재 비밀번호 틀림")
     void update_password_fail_not_valid_current_password() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
         String currentPassword = "failPassword1";
         String newPassword = "newPassword1";
         PasswordUpdate dto = new PasswordUpdate(currentPassword, newPassword);
@@ -312,7 +312,7 @@ class UserControllerTest {
     @DisplayName("유저 닉네임 수정")
     void update_name_success() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
         String newName = "새닉네임";
         NameUpdate dto = new NameUpdate(newName);
 
@@ -334,7 +334,7 @@ class UserControllerTest {
     @DisplayName("유저 닉네임 수정 실패 - 기존 닉네임과 새 닉네임 동일")
     void update_name_fail_equal_current_new_name() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
         String newName = "닉네임";
         NameUpdate dto = new NameUpdate(newName);
 
@@ -364,7 +364,7 @@ class UserControllerTest {
     @DisplayName("유저 정보 삭제")
     void deleteUser() throws Exception {
         // given
-        String id = "user1234";
+        String id = "test1user";
 
         // when
         ResultActions result = mockMvc.perform(delete("/users/me"));
